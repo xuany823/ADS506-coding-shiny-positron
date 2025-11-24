@@ -70,8 +70,8 @@ data_trn <- aus_wine_ts |>
 
 Inputs:
 
--   Toggle for model type: TSLM, ETS, ARIMA and specifications table
--   Toggle training accuracy
+-   Toggle for model specifications (default off)
+-   Toggle training accuracy (default off)
 -   Toggle forecasting accuracy
 
 ### Model fitting
@@ -80,11 +80,18 @@ Built multiple models for each varietal using TSLM, auto ETS and auto ARIMA.
 
 ```{r}
 fit <- data_trn |> 
-    model(TSLM(Sales ~ trend() + season()),
+    model(TSLM = TSLM(Sales ~ trend() + season()),
     ETS = ETS(Sales),
     ARIMA = ARIMA(Sales))
 
-fit |> knitr::kable(caption = "Model specifications by Varietal")
+### Model specifications
+fit
+# fit_specs <- fit |>
+#    as_tibble() |>
+#    select(Varietal, TSLM, ETS, ARIMA)
+
+# fit_specs |>
+#   knitr::kable(caption = "Model specifications by Varietal")
 ```
 
 The fitted models successfully report the required specifications: each varietal includes an ETS component form (e.g., ETS(M,A,M)) and a clearly identified ARIMA structure with full seasonal orders (e.g., ARIMA(0,0,0)(0,1,1)\[12\] w/ drift), which meets the MVP requirement for model specification.
@@ -113,8 +120,9 @@ fc |>
 
 ## Tab3 - Forecast
 
-Inputs:\
-\* User can select model type for forecast visualization and forecast table (ARIMA)
+Inputs:
+* Toggle User can select model type for forecast visualization 
+* Toggle User can select model for forecast table (ARIMA)
 
 ### Forecast visualization
 
