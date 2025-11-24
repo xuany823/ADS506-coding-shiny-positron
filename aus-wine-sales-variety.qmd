@@ -114,7 +114,7 @@ fc |>
 ## Tab3 - Forecast
 
 Inputs:\
-\* User can select model type for forecast visualization and forecast table (TSLM, ETS, ARIMA)
+\* User can select model type for forecast visualization and forecast table (ARIMA)
 
 ### Forecast visualization
 
