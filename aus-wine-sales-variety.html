@@ -113,8 +113,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="data-import-preparation" class="level1">
-<h1>Data import / preparation</h1>
+<section id="tab1---visualization" class="level2">
+<h2 class="anchored" data-anchor-id="tab1---visualization">Tab1 - Visualization</h2>
+<section id="data-import-preparation" class="level3">
+<h3 class="anchored" data-anchor-id="data-import-preparation">Data import / preparation</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>aus_wine <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/AustralianWines.csv"</span>),</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="at">col_types =</span> <span class="fu">cols</span>(<span class="at">Rose =</span> <span class="fu">col_number</span>()), <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> </span>
@@ -149,15 +151,17 @@ e.g.:
 </div>
 </div>
 </section>
-<section id="data-visualization" class="level1">
-<h1>Data visualization</h1>
+<section id="data-visualization" class="level3">
+<h3 class="anchored" data-anchor-id="data-visualization">Data visualization</h3>
+<p>Visualize the time series data for each varietal with a vertical line indicating the split between training and test sets (January 1994).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize with autoplot</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>aus_wine_ts <span class="sc">|&gt;</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">autoplot</span>(Sales) <span class="sc">+</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> Varietal, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Month"</span>, <span class="at">y =</span> <span class="st">"Sales"</span>) <span class="sc">+</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(aus_wine_ts, Sales) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> Varietal, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Month"</span>, <span class="at">y =</span> <span class="st">"Sales"</span>) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="fu">yearmonth</span>(<span class="st">"1994 Jan"</span>)), </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -167,1276 +171,404 @@ e.g.:
 </div>
 </div>
 </section>
-<section id="data-splitting" class="level1">
-<h1>Data Splitting</h1>
+<section id="data-splitting" class="level3">
+<h3 class="anchored" data-anchor-id="data-splitting">Data Splitting</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># training and test sets</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> aus_wine_ts <span class="sc">|&gt;</span> <span class="fu">filter_index</span>(<span class="st">"1980 Jan"</span> <span class="sc">~</span> <span class="st">"1993 Dec"</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> aus_wine_ts <span class="sc">|&gt;</span> <span class="fu">filter_index</span>(<span class="st">"1994 Jan"</span> <span class="sc">~</span> <span class="st">"1994 Dec"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="model-fitting" class="level1">
-<h1>Model fitting</h1>
-<p>Built multiple models for each varietal using auto ETS and auto ARIMA.</p>
+</section>
+<section id="tab2---modeling-building" class="level2">
+<h2 class="anchored" data-anchor-id="tab2---modeling-building">Tab2 - Modeling Building</h2>
+<p>Imputs: * Toggle for model type: TSLM, ETS, ARIMA * Toggle training accuracy * Toggle forecasting accuracy * Forecast visualization ### Model fitting</p>
+<p>Built multiple models for each varietal using TSLM, auto ETS and auto ARIMA.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> train <span class="sc">|&gt;</span> </span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">model</span>(<span class="fu">TSLM</span>(Sales <span class="sc">~</span> <span class="fu">trend</span>() <span class="sc">+</span> <span class="fu">season</span>()),</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ETS =</span> <span class="fu">ETS</span>(Sales),</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">ARIMA =</span> <span class="fu">ARIMA</span>(Sales))</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>fit <span class="sc">|&gt;</span> <span class="fu">t</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                                 [,1]                            
-Varietal                         "Dry white"                     
-TSLM(Sales ~ trend() + season()) TSLM                            
-ETS                              ETS(M,N,M)                      
-ARIMA                            ARIMA(0,0,0)(0,1,1)[12] w/ drift
-                                 [,2]                            
-Varietal                         "Fortified"                     
-TSLM(Sales ~ trend() + season()) TSLM                            
-ETS                              ETS(M,A,M)                      
-ARIMA                            ARIMA(0,0,0)(2,1,1)[12] w/ drift
-                                 [,3]                            
-Varietal                         "Red"                           
-TSLM(Sales ~ trend() + season()) TSLM                            
-ETS                              ETS(M,A,M)                      
-ARIMA                            ARIMA(1,0,1)(0,1,1)[12] w/ drift
-                                 [,4]                            
-Varietal                         "Rose"                          
-TSLM(Sales ~ trend() + season()) TSLM                            
-ETS                              ETS(M,A,M)                      
-ARIMA                            ARIMA(3,0,0)(2,1,0)[12] w/ drift
-                                 [,5]                   
-Varietal                         "Sweet white"          
-TSLM(Sales ~ trend() + season()) TSLM                   
-ETS                              ETS(M,A,M)             
-ARIMA                            ARIMA(2,0,0)(0,1,1)[12]
-                                 [,6]                            
-Varietal                         "sparkling"                     
-TSLM(Sales ~ trend() + season()) TSLM                            
-ETS                              ETS(M,N,M)                      
-ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>fit <span class="sc">|&gt;</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Model specifications by Varietal"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Model specifications by Varietal</caption>
+<colgroup>
+<col style="width: 12%">
+<col style="width: 35%">
+<col style="width: 13%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Varietal</th>
+<th style="text-align: left;">TSLM(Sales ~ trend() + season())</th>
+<th style="text-align: left;">ETS</th>
+<th style="text-align: left;">ARIMA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Dry white</td>
+<td style="text-align: left;"><tslm></tslm></td>
+<td style="text-align: left;">&lt;ETS(M,N,M)&gt;</td>
+<td style="text-align: left;">&lt;ARIMA(0,0,0)(0,1,1)[12] w/ drift&gt;</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fortified</td>
+<td style="text-align: left;"><tslm></tslm></td>
+<td style="text-align: left;">&lt;ETS(M,A,M)&gt;</td>
+<td style="text-align: left;">&lt;ARIMA(0,0,0)(2,1,1)[12] w/ drift&gt;</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Red</td>
+<td style="text-align: left;"><tslm></tslm></td>
+<td style="text-align: left;">&lt;ETS(M,A,M)&gt;</td>
+<td style="text-align: left;">&lt;ARIMA(1,0,1)(0,1,1)[12] w/ drift&gt;</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rose</td>
+<td style="text-align: left;"><tslm></tslm></td>
+<td style="text-align: left;">&lt;ETS(M,A,M)&gt;</td>
+<td style="text-align: left;">&lt;ARIMA(3,0,0)(2,1,0)[12] w/ drift&gt;</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sweet white</td>
+<td style="text-align: left;"><tslm></tslm></td>
+<td style="text-align: left;">&lt;ETS(M,A,M)&gt;</td>
+<td style="text-align: left;">&lt;ARIMA(2,0,0)(0,1,1)[12]&gt;</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sparkling</td>
+<td style="text-align: left;"><tslm></tslm></td>
+<td style="text-align: left;">&lt;ETS(M,N,M)&gt;</td>
+<td style="text-align: left;">&lt;ARIMA(0,0,1)(0,1,2)[12] w/ drift&gt;</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <p>The fitted models successfully report the required specifications: each varietal includes an ETS component form (e.g., ETS(M,A,M)) and a clearly identified ARIMA structure with full seasonal orders (e.g., ARIMA(0,0,0)(0,1,1)[12] w/ drift), which meets the MVP requirement for model specification.</p>
-</section>
-<section id="training-accuracy" class="level1">
-<h1>Training accuracy</h1>
+<section id="training-accuracy" class="level3">
+<h3 class="anchored" data-anchor-id="training-accuracy">Training accuracy</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fit <span class="sc">|&gt;</span> </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">accuracy</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Varietal, .model, Varietal, RMSE, MAE, MAPE) <span class="sc">|&gt;</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(.model, Varietal) <span class="sc">|&gt;</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span> <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">2</span>)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit <span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">accuracy</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Varietal, .model, RMSE, MAE, MAPE) <span class="sc">|&gt;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(RMSE) <span class="sc">|&gt;</span> </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>, <span class="at">caption =</span> <span class="st">"Training accuracy sorted by RMSE"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="grpdapxwad" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#grpdapxwad table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#grpdapxwad thead, #grpdapxwad tbody, #grpdapxwad tfoot, #grpdapxwad tr, #grpdapxwad td, #grpdapxwad th {
-  border-style: none;
-}
-
-#grpdapxwad p {
-  margin: 0;
-  padding: 0;
-}
-
-#grpdapxwad .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#grpdapxwad .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-#grpdapxwad .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#grpdapxwad .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#grpdapxwad .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#grpdapxwad .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#grpdapxwad .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#grpdapxwad .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#grpdapxwad .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#grpdapxwad .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#grpdapxwad .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#grpdapxwad .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#grpdapxwad .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-
-#grpdapxwad .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-
-#grpdapxwad .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#grpdapxwad .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#grpdapxwad .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#grpdapxwad .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#grpdapxwad .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#grpdapxwad .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-
-#grpdapxwad .gt_row_group_first td {
-  border-top-width: 2px;
-}
-
-#grpdapxwad .gt_row_group_first th {
-  border-top-width: 2px;
-}
-
-#grpdapxwad .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#grpdapxwad .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-
-#grpdapxwad .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-
-#grpdapxwad .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#grpdapxwad .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#grpdapxwad .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#grpdapxwad .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-
-#grpdapxwad .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#grpdapxwad .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#grpdapxwad .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#grpdapxwad .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#grpdapxwad .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#grpdapxwad .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#grpdapxwad .gt_left {
-  text-align: left;
-}
-
-#grpdapxwad .gt_center {
-  text-align: center;
-}
-
-#grpdapxwad .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#grpdapxwad .gt_font_normal {
-  font-weight: normal;
-}
-
-#grpdapxwad .gt_font_bold {
-  font-weight: bold;
-}
-
-#grpdapxwad .gt_font_italic {
-  font-style: italic;
-}
-
-#grpdapxwad .gt_super {
-  font-size: 65%;
-}
-
-#grpdapxwad .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-
-#grpdapxwad .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-
-#grpdapxwad .gt_indent_1 {
-  text-indent: 5px;
-}
-
-#grpdapxwad .gt_indent_2 {
-  text-indent: 10px;
-}
-
-#grpdapxwad .gt_indent_3 {
-  text-indent: 15px;
-}
-
-#grpdapxwad .gt_indent_4 {
-  text-indent: 20px;
-}
-
-#grpdapxwad .gt_indent_5 {
-  text-indent: 25px;
-}
-
-#grpdapxwad .katex-display {
-  display: inline-flex !important;
-  margin-bottom: 0.75em !important;
-}
-
-#grpdapxwad div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
-  height: 0px !important;
-}
-</style>
-
-<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<table class="caption-top table table-sm table-striped small">
+<caption>Training accuracy sorted by RMSE</caption>
 <thead>
-<tr class="gt_col_headings header">
-<th id="Varietal" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Varietal</th>
-<th id="a.model" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">.model</th>
-<th id="RMSE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">RMSE</th>
-<th id="MAE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MAE</th>
-<th id="MAPE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MAPE</th>
+<tr class="header">
+<th style="text-align: left;">Varietal</th>
+<th style="text-align: left;">.model</th>
+<th style="text-align: right;">RMSE</th>
+<th style="text-align: right;">MAE</th>
+<th style="text-align: right;">MAPE</th>
 </tr>
 </thead>
-<tbody class="gt_table_body">
+<tbody>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Varietal">Dry white</td>
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_right" headers="RMSE">326.12</td>
-<td class="gt_row gt_right" headers="MAE">230.17</td>
-<td class="gt_row gt_right" headers="MAPE">7.33</td>
+<td style="text-align: left;">Rose</td>
+<td style="text-align: left;">ETS</td>
+<td style="text-align: right;">17.1</td>
+<td style="text-align: right;">12.0</td>
+<td style="text-align: right;">12.3</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Varietal">Fortified</td>
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_right" headers="RMSE">283.03</td>
-<td class="gt_row gt_right" headers="MAE">209.55</td>
-<td class="gt_row gt_right" headers="MAPE">6.84</td>
+<td style="text-align: left;">Rose</td>
+<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: right;">18.5</td>
+<td style="text-align: right;">13.1</td>
+<td style="text-align: right;">14.0</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Varietal">Red</td>
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_right" headers="RMSE">194.55</td>
-<td class="gt_row gt_right" headers="MAE">139.48</td>
-<td class="gt_row gt_right" headers="MAPE">8.95</td>
+<td style="text-align: left;">Rose</td>
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">19.4</td>
+<td style="text-align: right;">13.1</td>
+<td style="text-align: right;">14.0</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Varietal">Rose</td>
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_right" headers="RMSE">19.39</td>
-<td class="gt_row gt_right" headers="MAE">13.07</td>
-<td class="gt_row gt_right" headers="MAPE">13.98</td>
+<td style="text-align: left;">Sweet white</td>
+<td style="text-align: left;">ETS</td>
+<td style="text-align: right;">44.6</td>
+<td style="text-align: right;">31.3</td>
+<td style="text-align: right;">13.0</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Varietal">Sweet white</td>
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_right" headers="RMSE">50.59</td>
-<td class="gt_row gt_right" headers="MAE">35.58</td>
-<td class="gt_row gt_right" headers="MAPE">13.85</td>
+<td style="text-align: left;">Sweet white</td>
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">50.6</td>
+<td style="text-align: right;">35.6</td>
+<td style="text-align: right;">13.9</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Varietal">sparkling</td>
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_right" headers="RMSE">355.07</td>
-<td class="gt_row gt_right" headers="MAE">247.00</td>
-<td class="gt_row gt_right" headers="MAPE">11.06</td>
+<td style="text-align: left;">Sweet white</td>
+<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: right;">100.9</td>
+<td style="text-align: right;">81.0</td>
+<td style="text-align: right;">35.5</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Varietal">Dry white</td>
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_right" headers="RMSE">318.36</td>
-<td class="gt_row gt_right" headers="MAE">243.41</td>
-<td class="gt_row gt_right" headers="MAPE">7.64</td>
+<td style="text-align: left;">Red</td>
+<td style="text-align: left;">ETS</td>
+<td style="text-align: right;">177.7</td>
+<td style="text-align: right;">132.5</td>
+<td style="text-align: right;">8.3</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Varietal">Fortified</td>
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_right" headers="RMSE">285.23</td>
-<td class="gt_row gt_right" headers="MAE">222.32</td>
-<td class="gt_row gt_right" headers="MAPE">7.10</td>
+<td style="text-align: left;">Red</td>
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">194.5</td>
+<td style="text-align: right;">139.5</td>
+<td style="text-align: right;">8.9</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Varietal">Red</td>
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_right" headers="RMSE">177.65</td>
-<td class="gt_row gt_right" headers="MAE">132.50</td>
-<td class="gt_row gt_right" headers="MAPE">8.33</td>
+<td style="text-align: left;">Red</td>
+<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: right;">197.7</td>
+<td style="text-align: right;">152.6</td>
+<td style="text-align: right;">10.9</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Varietal">Rose</td>
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_right" headers="RMSE">17.13</td>
-<td class="gt_row gt_right" headers="MAE">12.04</td>
-<td class="gt_row gt_right" headers="MAPE">12.25</td>
+<td style="text-align: left;">Fortified</td>
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">283.0</td>
+<td style="text-align: right;">209.5</td>
+<td style="text-align: right;">6.8</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Varietal">Sweet white</td>
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_right" headers="RMSE">44.57</td>
-<td class="gt_row gt_right" headers="MAE">31.26</td>
-<td class="gt_row gt_right" headers="MAPE">12.97</td>
+<td style="text-align: left;">Fortified</td>
+<td style="text-align: left;">ETS</td>
+<td style="text-align: right;">285.2</td>
+<td style="text-align: right;">222.3</td>
+<td style="text-align: right;">7.1</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Varietal">sparkling</td>
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_right" headers="RMSE">349.91</td>
-<td class="gt_row gt_right" headers="MAE">254.85</td>
-<td class="gt_row gt_right" headers="MAPE">11.01</td>
+<td style="text-align: left;">Fortified</td>
+<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: right;">286.2</td>
+<td style="text-align: right;">222.4</td>
+<td style="text-align: right;">7.2</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Varietal">Dry white</td>
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_right" headers="RMSE">315.52</td>
-<td class="gt_row gt_right" headers="MAE">243.12</td>
-<td class="gt_row gt_right" headers="MAPE">7.74</td>
+<td style="text-align: left;">Dry white</td>
+<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: right;">315.5</td>
+<td style="text-align: right;">243.1</td>
+<td style="text-align: right;">7.7</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Varietal">Fortified</td>
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_right" headers="RMSE">286.21</td>
-<td class="gt_row gt_right" headers="MAE">222.37</td>
-<td class="gt_row gt_right" headers="MAPE">7.21</td>
+<td style="text-align: left;">Dry white</td>
+<td style="text-align: left;">ETS</td>
+<td style="text-align: right;">318.4</td>
+<td style="text-align: right;">243.4</td>
+<td style="text-align: right;">7.6</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Varietal">Red</td>
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_right" headers="RMSE">197.68</td>
-<td class="gt_row gt_right" headers="MAE">152.57</td>
-<td class="gt_row gt_right" headers="MAPE">10.94</td>
+<td style="text-align: left;">Dry white</td>
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">326.1</td>
+<td style="text-align: right;">230.2</td>
+<td style="text-align: right;">7.3</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Varietal">Rose</td>
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_right" headers="RMSE">18.46</td>
-<td class="gt_row gt_right" headers="MAE">13.11</td>
-<td class="gt_row gt_right" headers="MAPE">13.95</td>
+<td style="text-align: left;">sparkling</td>
+<td style="text-align: left;">ETS</td>
+<td style="text-align: right;">349.9</td>
+<td style="text-align: right;">254.9</td>
+<td style="text-align: right;">11.0</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Varietal">Sweet white</td>
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_right" headers="RMSE">100.88</td>
-<td class="gt_row gt_right" headers="MAE">81.03</td>
-<td class="gt_row gt_right" headers="MAPE">35.50</td>
+<td style="text-align: left;">sparkling</td>
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">355.1</td>
+<td style="text-align: right;">247.0</td>
+<td style="text-align: right;">11.1</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Varietal">sparkling</td>
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_right" headers="RMSE">367.66</td>
-<td class="gt_row gt_right" headers="MAE">267.89</td>
-<td class="gt_row gt_right" headers="MAPE">11.38</td>
+<td style="text-align: left;">sparkling</td>
+<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: right;">367.7</td>
+<td style="text-align: right;">267.9</td>
+<td style="text-align: right;">11.4</td>
 </tr>
 </tbody>
 </table>
-
-</div>
 </div>
 </div>
 </section>
-<section id="forecasting-accuracy" class="level1">
-<h1>Forecasting accuracy</h1>
+<section id="forecasting-accuracy" class="level3">
+<h3 class="anchored" data-anchor-id="forecasting-accuracy">Forecasting accuracy</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fc <span class="ot">&lt;-</span> fit <span class="sc">|&gt;</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">forecast</span>(test)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>fc <span class="sc">|&gt;</span> </span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">accuracy</span>(test) <span class="sc">|&gt;</span> </span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Varietal, .model, Varietal, RMSE, MAE, MAPE) <span class="sc">|&gt;</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(.model, Varietal) <span class="sc">|&gt;</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span> <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fc <span class="ot">&lt;-</span> fit <span class="sc">|&gt;</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">forecast</span>(test)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>fc <span class="sc">|&gt;</span> </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">accuracy</span>(test) <span class="sc">|&gt;</span> </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Varietal, .model, RMSE, MAE, MAPE) <span class="sc">|&gt;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(RMSE) <span class="sc">|&gt;</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>, <span class="at">caption =</span> <span class="st">"Validation accuracy sorted by RMSE"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="lykrbodenp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#lykrbodenp table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#lykrbodenp thead, #lykrbodenp tbody, #lykrbodenp tfoot, #lykrbodenp tr, #lykrbodenp td, #lykrbodenp th {
-  border-style: none;
-}
-
-#lykrbodenp p {
-  margin: 0;
-  padding: 0;
-}
-
-#lykrbodenp .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#lykrbodenp .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-#lykrbodenp .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#lykrbodenp .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#lykrbodenp .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#lykrbodenp .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#lykrbodenp .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#lykrbodenp .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#lykrbodenp .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#lykrbodenp .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#lykrbodenp .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#lykrbodenp .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#lykrbodenp .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-
-#lykrbodenp .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-
-#lykrbodenp .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#lykrbodenp .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#lykrbodenp .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#lykrbodenp .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#lykrbodenp .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#lykrbodenp .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-
-#lykrbodenp .gt_row_group_first td {
-  border-top-width: 2px;
-}
-
-#lykrbodenp .gt_row_group_first th {
-  border-top-width: 2px;
-}
-
-#lykrbodenp .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#lykrbodenp .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-
-#lykrbodenp .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-
-#lykrbodenp .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#lykrbodenp .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#lykrbodenp .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#lykrbodenp .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-
-#lykrbodenp .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#lykrbodenp .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#lykrbodenp .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#lykrbodenp .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#lykrbodenp .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#lykrbodenp .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#lykrbodenp .gt_left {
-  text-align: left;
-}
-
-#lykrbodenp .gt_center {
-  text-align: center;
-}
-
-#lykrbodenp .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#lykrbodenp .gt_font_normal {
-  font-weight: normal;
-}
-
-#lykrbodenp .gt_font_bold {
-  font-weight: bold;
-}
-
-#lykrbodenp .gt_font_italic {
-  font-style: italic;
-}
-
-#lykrbodenp .gt_super {
-  font-size: 65%;
-}
-
-#lykrbodenp .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-
-#lykrbodenp .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-
-#lykrbodenp .gt_indent_1 {
-  text-indent: 5px;
-}
-
-#lykrbodenp .gt_indent_2 {
-  text-indent: 10px;
-}
-
-#lykrbodenp .gt_indent_3 {
-  text-indent: 15px;
-}
-
-#lykrbodenp .gt_indent_4 {
-  text-indent: 20px;
-}
-
-#lykrbodenp .gt_indent_5 {
-  text-indent: 25px;
-}
-
-#lykrbodenp .katex-display {
-  display: inline-flex !important;
-  margin-bottom: 0.75em !important;
-}
-
-#lykrbodenp div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
-  height: 0px !important;
-}
-</style>
-
-<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<table class="caption-top table table-sm table-striped small">
+<caption>Validation accuracy sorted by RMSE</caption>
 <thead>
-<tr class="gt_col_headings header">
-<th id="Varietal" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Varietal</th>
-<th id="a.model" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">.model</th>
-<th id="RMSE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">RMSE</th>
-<th id="MAE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MAE</th>
-<th id="MAPE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MAPE</th>
+<tr class="header">
+<th style="text-align: left;">Varietal</th>
+<th style="text-align: left;">.model</th>
+<th style="text-align: right;">RMSE</th>
+<th style="text-align: right;">MAE</th>
+<th style="text-align: right;">MAPE</th>
 </tr>
 </thead>
-<tbody class="gt_table_body">
+<tbody>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Varietal">Dry white</td>
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_right" headers="RMSE">484.39</td>
-<td class="gt_row gt_right" headers="MAE">420.06</td>
-<td class="gt_row gt_right" headers="MAPE">10.26</td>
+<td style="text-align: left;">Rose</td>
+<td style="text-align: left;">ETS</td>
+<td style="text-align: right;">8.4</td>
+<td style="text-align: right;">6.1</td>
+<td style="text-align: right;">11.1</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Varietal">Fortified</td>
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_right" headers="RMSE">328.50</td>
-<td class="gt_row gt_right" headers="MAE">266.46</td>
-<td class="gt_row gt_right" headers="MAPE">11.65</td>
+<td style="text-align: left;">Rose</td>
+<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: right;">9.2</td>
+<td style="text-align: right;">7.6</td>
+<td style="text-align: right;">16.4</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Varietal">Red</td>
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_right" headers="RMSE">257.86</td>
-<td class="gt_row gt_right" headers="MAE">202.54</td>
-<td class="gt_row gt_right" headers="MAPE">8.63</td>
+<td style="text-align: left;">Rose</td>
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">9.2</td>
+<td style="text-align: right;">8.1</td>
+<td style="text-align: right;">16.8</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Varietal">Rose</td>
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_right" headers="RMSE">9.21</td>
-<td class="gt_row gt_right" headers="MAE">8.12</td>
-<td class="gt_row gt_right" headers="MAPE">16.80</td>
+<td style="text-align: left;">Sweet white</td>
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">51.3</td>
+<td style="text-align: right;">45.5</td>
+<td style="text-align: right;">21.1</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Varietal">Sweet white</td>
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_right" headers="RMSE">51.27</td>
-<td class="gt_row gt_right" headers="MAE">45.49</td>
-<td class="gt_row gt_right" headers="MAPE">21.12</td>
+<td style="text-align: left;">Sweet white</td>
+<td style="text-align: left;">ETS</td>
+<td style="text-align: right;">61.1</td>
+<td style="text-align: right;">53.3</td>
+<td style="text-align: right;">24.7</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Varietal">sparkling</td>
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_right" headers="RMSE">461.46</td>
-<td class="gt_row gt_right" headers="MAE">363.62</td>
-<td class="gt_row gt_right" headers="MAPE">18.19</td>
+<td style="text-align: left;">Sweet white</td>
+<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: right;">112.8</td>
+<td style="text-align: right;">104.2</td>
+<td style="text-align: right;">47.7</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Varietal">Dry white</td>
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_right" headers="RMSE">562.69</td>
-<td class="gt_row gt_right" headers="MAE">510.79</td>
-<td class="gt_row gt_right" headers="MAPE">12.71</td>
+<td style="text-align: left;">Red</td>
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">257.9</td>
+<td style="text-align: right;">202.5</td>
+<td style="text-align: right;">8.6</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Varietal">Fortified</td>
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_right" headers="RMSE">318.90</td>
-<td class="gt_row gt_right" headers="MAE">242.65</td>
-<td class="gt_row gt_right" headers="MAPE">10.24</td>
+<td style="text-align: left;">Red</td>
+<td style="text-align: left;">ETS</td>
+<td style="text-align: right;">297.2</td>
+<td style="text-align: right;">255.4</td>
+<td style="text-align: right;">10.4</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Varietal">Red</td>
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_right" headers="RMSE">297.16</td>
-<td class="gt_row gt_right" headers="MAE">255.37</td>
-<td class="gt_row gt_right" headers="MAPE">10.43</td>
+<td style="text-align: left;">Fortified</td>
+<td style="text-align: left;">ETS</td>
+<td style="text-align: right;">318.9</td>
+<td style="text-align: right;">242.7</td>
+<td style="text-align: right;">10.2</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Varietal">Rose</td>
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_right" headers="RMSE">8.38</td>
-<td class="gt_row gt_right" headers="MAE">6.10</td>
-<td class="gt_row gt_right" headers="MAPE">11.07</td>
+<td style="text-align: left;">Red</td>
+<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: right;">319.3</td>
+<td style="text-align: right;">249.0</td>
+<td style="text-align: right;">11.8</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Varietal">Sweet white</td>
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_right" headers="RMSE">61.11</td>
-<td class="gt_row gt_right" headers="MAE">53.32</td>
-<td class="gt_row gt_right" headers="MAPE">24.69</td>
+<td style="text-align: left;">Fortified</td>
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">328.5</td>
+<td style="text-align: right;">266.5</td>
+<td style="text-align: right;">11.6</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Varietal">sparkling</td>
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_right" headers="RMSE">444.48</td>
-<td class="gt_row gt_right" headers="MAE">338.62</td>
-<td class="gt_row gt_right" headers="MAPE">17.58</td>
+<td style="text-align: left;">Fortified</td>
+<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: right;">426.5</td>
+<td style="text-align: right;">362.7</td>
+<td style="text-align: right;">16.3</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Varietal">Dry white</td>
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_right" headers="RMSE">556.28</td>
-<td class="gt_row gt_right" headers="MAE">497.74</td>
-<td class="gt_row gt_right" headers="MAPE">12.37</td>
+<td style="text-align: left;">sparkling</td>
+<td style="text-align: left;">ETS</td>
+<td style="text-align: right;">444.5</td>
+<td style="text-align: right;">338.6</td>
+<td style="text-align: right;">17.6</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Varietal">Fortified</td>
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_right" headers="RMSE">426.53</td>
-<td class="gt_row gt_right" headers="MAE">362.69</td>
-<td class="gt_row gt_right" headers="MAPE">16.25</td>
+<td style="text-align: left;">sparkling</td>
+<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: right;">459.1</td>
+<td style="text-align: right;">353.4</td>
+<td style="text-align: right;">19.1</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Varietal">Red</td>
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_right" headers="RMSE">319.28</td>
-<td class="gt_row gt_right" headers="MAE">249.00</td>
-<td class="gt_row gt_right" headers="MAPE">11.79</td>
+<td style="text-align: left;">sparkling</td>
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">461.5</td>
+<td style="text-align: right;">363.6</td>
+<td style="text-align: right;">18.2</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Varietal">Rose</td>
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_right" headers="RMSE">9.19</td>
-<td class="gt_row gt_right" headers="MAE">7.59</td>
-<td class="gt_row gt_right" headers="MAPE">16.42</td>
+<td style="text-align: left;">Dry white</td>
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">484.4</td>
+<td style="text-align: right;">420.1</td>
+<td style="text-align: right;">10.3</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Varietal">Sweet white</td>
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_right" headers="RMSE">112.76</td>
-<td class="gt_row gt_right" headers="MAE">104.20</td>
-<td class="gt_row gt_right" headers="MAPE">47.74</td>
+<td style="text-align: left;">Dry white</td>
+<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: right;">556.3</td>
+<td style="text-align: right;">497.7</td>
+<td style="text-align: right;">12.4</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Varietal">sparkling</td>
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_right" headers="RMSE">459.05</td>
-<td class="gt_row gt_right" headers="MAE">353.39</td>
-<td class="gt_row gt_right" headers="MAPE">19.10</td>
+<td style="text-align: left;">Dry white</td>
+<td style="text-align: left;">ETS</td>
+<td style="text-align: right;">562.7</td>
+<td style="text-align: right;">510.8</td>
+<td style="text-align: right;">12.7</td>
 </tr>
 </tbody>
 </table>
-
-</div>
 </div>
 </div>
 </section>
-<section id="forecast-visualization" class="level1">
-<h1>Forecast visualization</h1>
+</section>
+<section id="tab3---forecast" class="level2">
+<h2 class="anchored" data-anchor-id="tab3---forecast">Tab3 - Forecast</h2>
+<p>Inputs: * User can select model type for forecast visualization and forecast table (TSLM, ETS, ARIMA)</p>
+<section id="forecast-visualization" class="level3">
+<h3 class="anchored" data-anchor-id="forecast-visualization">Forecast visualization</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fc <span class="sc">|&gt;</span> </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">autoplot</span>(train <span class="sc">|&gt;</span> <span class="fu">filter</span>(Month <span class="sc">&gt;=</span> <span class="fu">yearmonth</span>(<span class="st">"1993 Jan"</span>))) <span class="sc">+</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> Varietal, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol=</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Australian Wine Sales Forecasts by Varietal"</span>,</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Sales"</span>, <span class="at">x =</span> <span class="st">"Month"</span>) <span class="sc">+</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fc <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">autoplot</span>(train <span class="sc">|&gt;</span> <span class="fu">filter</span>(Month <span class="sc">&gt;=</span> <span class="fu">yearmonth</span>(<span class="st">"1993 Jan"</span>))) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> Varietal, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Australian Wine Sales Forecasts by Varietal"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Sales"</span>, <span class="at">x =</span> <span class="st">"Month"</span>) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1446,8 +578,158 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
 </div>
 </div>
 </section>
-<section id="report-generation" class="level1">
-<h1>Report generation</h1>
+<section id="forecast-table" class="level3">
+<h3 class="anchored" data-anchor-id="forecast-table">Forecast table</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fc <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(.model <span class="sc">==</span> <span class="st">'ARIMA'</span>, <span class="fu">year</span>(Month) <span class="sc">==</span> <span class="dv">1994</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span>                         </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Varietal, .model, Month, .mean) <span class="sc">|&gt;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> Month, <span class="at">values_from =</span> .mean) <span class="sc">|&gt;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">0</span>, <span class="at">caption =</span> <span class="st">"Forecasted Sales for 1994 by Varietal using ARIMA Model"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Forecasted Sales for 1994 by Varietal using ARIMA Model</caption>
+<colgroup>
+<col style="width: 9%">
+<col style="width: 5%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Varietal</th>
+<th style="text-align: left;">.model</th>
+<th style="text-align: right;">1994 Jan</th>
+<th style="text-align: right;">1994 Feb</th>
+<th style="text-align: right;">1994 Mar</th>
+<th style="text-align: right;">1994 Apr</th>
+<th style="text-align: right;">1994 May</th>
+<th style="text-align: right;">1994 Jun</th>
+<th style="text-align: right;">1994 Jul</th>
+<th style="text-align: right;">1994 Aug</th>
+<th style="text-align: right;">1994 Sep</th>
+<th style="text-align: right;">1994 Oct</th>
+<th style="text-align: right;">1994 Nov</th>
+<th style="text-align: right;">1994 Dec</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Dry white</td>
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">2371</td>
+<td style="text-align: right;">3185</td>
+<td style="text-align: right;">3418</td>
+<td style="text-align: right;">3259</td>
+<td style="text-align: right;">3172</td>
+<td style="text-align: right;">3005</td>
+<td style="text-align: right;">3733</td>
+<td style="text-align: right;">3888</td>
+<td style="text-align: right;">3389</td>
+<td style="text-align: right;">3702</td>
+<td style="text-align: right;">4389</td>
+<td style="text-align: right;">5247</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fortified</td>
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">1065</td>
+<td style="text-align: right;">1304</td>
+<td style="text-align: right;">1806</td>
+<td style="text-align: right;">1966</td>
+<td style="text-align: right;">2382</td>
+<td style="text-align: right;">2544</td>
+<td style="text-align: right;">3023</td>
+<td style="text-align: right;">2612</td>
+<td style="text-align: right;">1983</td>
+<td style="text-align: right;">1745</td>
+<td style="text-align: right;">2307</td>
+<td style="text-align: right;">2560</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Red</td>
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">1262</td>
+<td style="text-align: right;">1594</td>
+<td style="text-align: right;">2104</td>
+<td style="text-align: right;">2154</td>
+<td style="text-align: right;">2307</td>
+<td style="text-align: right;">2405</td>
+<td style="text-align: right;">3056</td>
+<td style="text-align: right;">2909</td>
+<td style="text-align: right;">2309</td>
+<td style="text-align: right;">2205</td>
+<td style="text-align: right;">2486</td>
+<td style="text-align: right;">2673</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rose</td>
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">75</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sweet white</td>
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">231</td>
+<td style="text-align: right;">242</td>
+<td style="text-align: right;">255</td>
+<td style="text-align: right;">243</td>
+<td style="text-align: right;">221</td>
+<td style="text-align: right;">195</td>
+<td style="text-align: right;">281</td>
+<td style="text-align: right;">289</td>
+<td style="text-align: right;">254</td>
+<td style="text-align: right;">276</td>
+<td style="text-align: right;">339</td>
+<td style="text-align: right;">425</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sparkling</td>
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">1703</td>
+<td style="text-align: right;">1679</td>
+<td style="text-align: right;">1967</td>
+<td style="text-align: right;">1984</td>
+<td style="text-align: right;">1795</td>
+<td style="text-align: right;">1578</td>
+<td style="text-align: right;">2122</td>
+<td style="text-align: right;">2443</td>
+<td style="text-align: right;">2108</td>
+<td style="text-align: right;">3355</td>
+<td style="text-align: right;">4247</td>
+<td style="text-align: right;">6379</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="report-generation" class="level3">
+<h3 class="anchored" data-anchor-id="report-generation">Report generation</h3>
+<p>As an additional user-experience feature, I present the training and validation accuracy using formatted gt tables and focus the forecast visualization on the most recent history (from 1993 onward), which makes it easier to compare model performance and interpret the forecast region.</p>
+</section>
 </section>
 
 </main>

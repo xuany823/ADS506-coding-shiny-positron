@@ -1,5 +1,5 @@
 ---
-title: "ADS 506 — Week 5 Submission: Storytelling with Shiny Apps"
+title: "ADS 506 - Week 5 Submission: Storytelling with Shiny Apps"
 format: html
 author: "Michelle Wang"
 date: "June 10, 2024"
@@ -12,7 +12,9 @@ library(readr)
 library(tidyverse)
 ```
 
-# Data import / preparation
+## Tab1 - Visualization
+
+### Data import / preparation
 
 ```{r}
 aus_wine <- read_csv(here::here("data/AustralianWines.csv"),
@@ -26,18 +28,21 @@ aus_wine_ts <- aus_wine |>
 aus_wine_ts
 ```
 
-# Data visualization
+### Data visualization
+
+Visualize the time series data for each varietal with a vertical line indicating the split between training and test sets (January 1994).
 
 ```{r}
-# visualize with autoplot
-aus_wine_ts |>
-    autoplot(Sales) +
-    facet_wrap(~ Varietal, scales = "free_y") +
+autoplot(aus_wine_ts, Sales) +
+    facet_wrap(~ Varietal, scales = "free_y", ncol = 1) +
     labs(x = "Month", y = "Sales") +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    geom_vline(xintercept = as.Date(yearmonth("1994 Jan")), 
+    color = "red", linetype = "dashed"
+  )
 ```
 
-# Data Splitting
+### Data Splitting
 
 ```{r}
 # training and test sets
@@ -45,9 +50,11 @@ train <- aus_wine_ts |> filter_index("1980 Jan" ~ "1993 Dec")
 test <- aus_wine_ts |> filter_index("1994 Jan" ~ "1994 Dec")
 ```
 
-# Model fitting
+## Tab2 - Modeling Building
 
-Built multiple models for each varietal using auto ETS and auto ARIMA.
+Imputs: \* Toggle for model type: TSLM, ETS, ARIMA \* Toggle training accuracy \* Toggle forecasting accuracy \* Forecast visualization \### Model fitting
+
+Built multiple models for each varietal using TSLM, auto ETS and auto ARIMA.
 
 ```{r}
 fit <- train |> 
@@ -55,34 +62,38 @@ fit <- train |>
     ETS = ETS(Sales),
     ARIMA = ARIMA(Sales))
 
-fit |> t()
+fit |> knitr::kable(caption = "Model specifications by Varietal")
 ```
 
 The fitted models successfully report the required specifications: each varietal includes an ETS component form (e.g., ETS(M,A,M)) and a clearly identified ARIMA structure with full seasonal orders (e.g., ARIMA(0,0,0)(0,1,1)\[12\] w/ drift), which meets the MVP requirement for model specification.
 
-# Training accuracy
+### Training accuracy
 
 ```{r}
 fit |> 
     accuracy() |> 
-    select(Varietal, .model, Varietal, RMSE, MAE, MAPE) |>
-    arrange(.model, Varietal) |>
-    gt() |> fmt_number(decimals = 2)  
+    select(Varietal, .model, RMSE, MAE, MAPE) |>
+    arrange(RMSE) |> 
+    knitr::kable(digits = 1, caption = "Training accuracy sorted by RMSE")
 ```
 
-# Forecasting accuracy
+### Forecasting accuracy
 
 ```{r}
 fc <- fit |> 
     forecast(test)
 fc |> 
     accuracy(test) |> 
-    select(Varietal, .model, Varietal, RMSE, MAE, MAPE) |>
-    arrange(.model, Varietal) |>
-    gt() |> fmt_number(decimals = 2)
+    select(Varietal, .model, RMSE, MAE, MAPE) |>
+    arrange(RMSE) |>
+    knitr::kable(digits = 1, caption = "Validation accuracy sorted by RMSE")
 ```
 
-# Forecast visualization
+## Tab3 - Forecast
+
+Inputs: \* User can select model type for forecast visualization and forecast table (TSLM, ETS, ARIMA)
+
+### Forecast visualization
 
 ```{r}
 fc |> 
@@ -93,4 +104,18 @@ fc |>
         theme_minimal()
 ```
 
-# Report generation
+### Forecast table
+
+```{r}
+
+fc |>
+  filter(.model == 'ARIMA', year(Month) == 1994) |>
+  as_tibble() |>                         
+  select(Varietal, .model, Month, .mean) |>
+  pivot_wider(names_from = Month, values_from = .mean) |>
+  knitr::kable(digits = 0, caption = "Forecasted Sales for 1994 by Varietal using ARIMA Model")
+```
+
+### Report generation
+
+As an additional user-experience feature, I present the training and validation accuracy using formatted gt tables and focus the forecast visualization on the most recent history (from 1993 onward), which makes it easier to compare model performance and interpret the forecast region.
