@@ -59,9 +59,11 @@ autoplot(aus_wine_ts, Sales) +
 ### Data Splitting
 
 ```{r}
-# training and test sets
-train <- aus_wine_ts |> filter_index("1980 Jan" ~ "1993 Dec")
-test <- aus_wine_ts |> filter_index("1994 Jan" ~ "1994 Dec")
+# Create training cutoff date and split data
+train_cutoff  <- yearmonth("1994 Jan")
+
+data_trn <- aus_wine_ts |> 
+  filter(Month < train_cutoff)
 ```
 
 ## Tab2 - Modeling Building
@@ -77,7 +79,7 @@ Imputs:
 Built multiple models for each varietal using TSLM, auto ETS and auto ARIMA.
 
 ```{r}
-fit <- train |> 
+fit <- data_trn |> 
     model(TSLM(Sales ~ trend() + season()),
     ETS = ETS(Sales),
     ARIMA = ARIMA(Sales))
@@ -101,9 +103,9 @@ fit |>
 
 ```{r}
 fc <- fit |> 
-    forecast(test)
+    forecast(h = "1 year")
 fc |> 
-    accuracy(test) |> 
+    accuracy(aus_wine_ts) |> 
     select(Varietal, .model, RMSE, MAE, MAPE) |>
     arrange(RMSE) |>
     knitr::kable(digits = 1, caption = "Validation accuracy sorted by RMSE")
@@ -117,8 +119,10 @@ Inputs:\
 ### Forecast visualization
 
 ```{r}
+trn_start <- train_cutoff - 24
+
 fc |> 
-    autoplot(train |> filter(Month >= yearmonth("1993 Jan"))) +
+    autoplot(aus_wine_ts |> filter(Month >= trn_start)) +
     facet_wrap(~ Varietal, scales = "free_y", ncol=1) +
     labs(title = "Australian Wine Sales Forecasts by Varietal",
     y = "Sales", x = "Month") +
