@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Michelle Wang">
+<meta name="dcterms.date" content="2024-06-10">
 
-<title>Untitled</title>
+<title>ADS 506 — Week 5 Submission: Storytelling with Shiny Apps</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -82,14 +84,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Untitled</h1>
+<h1 class="title">ADS 506 — Week 5 Submission: Storytelling with Shiny Apps</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Michelle Wang </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 10, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -205,1507 +219,33 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
 </div>
 </div>
 <p>The fitted models successfully report the required specifications: each varietal includes an ETS component form (e.g., ETS(M,A,M)) and a clearly identified ARIMA structure with full seasonal orders (e.g., ARIMA(0,0,0)(0,1,1)[12] w/ drift), which meets the MVP requirement for model specification.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>param_tbl <span class="ot">&lt;-</span> fit <span class="sc">|&gt;</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="sc">|&gt;</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(.model, term, estimate)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>param_tbl <span class="sc">|&gt;</span> </span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Model Parameters by Varietal and Model Type"</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div id="nhsblgxzny" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#nhsblgxzny table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#nhsblgxzny thead, #nhsblgxzny tbody, #nhsblgxzny tfoot, #nhsblgxzny tr, #nhsblgxzny td, #nhsblgxzny th {
-  border-style: none;
-}
-
-#nhsblgxzny p {
-  margin: 0;
-  padding: 0;
-}
-
-#nhsblgxzny .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#nhsblgxzny .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-#nhsblgxzny .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#nhsblgxzny .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#nhsblgxzny .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#nhsblgxzny .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#nhsblgxzny .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#nhsblgxzny .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#nhsblgxzny .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#nhsblgxzny .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#nhsblgxzny .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#nhsblgxzny .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#nhsblgxzny .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-
-#nhsblgxzny .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-
-#nhsblgxzny .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#nhsblgxzny .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#nhsblgxzny .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#nhsblgxzny .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#nhsblgxzny .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#nhsblgxzny .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-
-#nhsblgxzny .gt_row_group_first td {
-  border-top-width: 2px;
-}
-
-#nhsblgxzny .gt_row_group_first th {
-  border-top-width: 2px;
-}
-
-#nhsblgxzny .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#nhsblgxzny .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-
-#nhsblgxzny .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-
-#nhsblgxzny .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#nhsblgxzny .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#nhsblgxzny .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#nhsblgxzny .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-
-#nhsblgxzny .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#nhsblgxzny .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#nhsblgxzny .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#nhsblgxzny .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#nhsblgxzny .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#nhsblgxzny .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#nhsblgxzny .gt_left {
-  text-align: left;
-}
-
-#nhsblgxzny .gt_center {
-  text-align: center;
-}
-
-#nhsblgxzny .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#nhsblgxzny .gt_font_normal {
-  font-weight: normal;
-}
-
-#nhsblgxzny .gt_font_bold {
-  font-weight: bold;
-}
-
-#nhsblgxzny .gt_font_italic {
-  font-style: italic;
-}
-
-#nhsblgxzny .gt_super {
-  font-size: 65%;
-}
-
-#nhsblgxzny .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-
-#nhsblgxzny .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-
-#nhsblgxzny .gt_indent_1 {
-  text-indent: 5px;
-}
-
-#nhsblgxzny .gt_indent_2 {
-  text-indent: 10px;
-}
-
-#nhsblgxzny .gt_indent_3 {
-  text-indent: 15px;
-}
-
-#nhsblgxzny .gt_indent_4 {
-  text-indent: 20px;
-}
-
-#nhsblgxzny .gt_indent_5 {
-  text-indent: 25px;
-}
-
-#nhsblgxzny .katex-display {
-  display: inline-flex !important;
-  margin-bottom: 0.75em !important;
-}
-
-#nhsblgxzny div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
-  height: 0px !important;
-}
-</style>
-
-<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
-<thead>
-<tr class="gt_heading header">
-<td colspan="3" class="gt_heading gt_title gt_font_normal gt_bottom_border">Model Parameters by Varietal and Model Type</td>
-</tr>
-<tr class="gt_col_headings even">
-<th id="a.model" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">.model</th>
-<th id="term" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">term</th>
-<th id="estimate" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">estimate</th>
-</tr>
-</thead>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">(Intercept)</td>
-<td class="gt_row gt_right" headers="estimate">1.974641e+03</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">trend()</td>
-<td class="gt_row gt_right" headers="estimate">3.924069e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year2</td>
-<td class="gt_row gt_right" headers="estimate">3.900045e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year3</td>
-<td class="gt_row gt_right" headers="estimate">7.490090e+02</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year4</td>
-<td class="gt_row gt_right" headers="estimate">4.886564e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year5</td>
-<td class="gt_row gt_right" headers="estimate">5.930894e+02</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year6</td>
-<td class="gt_row gt_right" headers="estimate">5.146654e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year7</td>
-<td class="gt_row gt_right" headers="estimate">9.702413e+02</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year8</td>
-<td class="gt_row gt_right" headers="estimate">1.271889e+03</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year9</td>
-<td class="gt_row gt_right" headers="estimate">7.900360e+02</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year10</td>
-<td class="gt_row gt_right" headers="estimate">1.002326e+03</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year11</td>
-<td class="gt_row gt_right" headers="estimate">1.724188e+03</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year12</td>
-<td class="gt_row gt_right" headers="estimate">2.123407e+03</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">alpha</td>
-<td class="gt_row gt_right" headers="estimate">1.046416e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">gamma</td>
-<td class="gt_row gt_right" headers="estimate">1.003978e-04</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">l[0]</td>
-<td class="gt_row gt_right" headers="estimate">3.030839e+03</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[0]</td>
-<td class="gt_row gt_right" headers="estimate">1.391889e+00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-1]</td>
-<td class="gt_row gt_right" headers="estimate">1.247135e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-2]</td>
-<td class="gt_row gt_right" headers="estimate">1.026212e+00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-3]</td>
-<td class="gt_row gt_right" headers="estimate">9.755682e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-4]</td>
-<td class="gt_row gt_right" headers="estimate">1.148884e+00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-5]</td>
-<td class="gt_row gt_right" headers="estimate">1.023189e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-6]</td>
-<td class="gt_row gt_right" headers="estimate">8.821853e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-7]</td>
-<td class="gt_row gt_right" headers="estimate">9.136359e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-8]</td>
-<td class="gt_row gt_right" headers="estimate">8.693099e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-9]</td>
-<td class="gt_row gt_right" headers="estimate">9.515551e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-10]</td>
-<td class="gt_row gt_right" headers="estimate">8.447967e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-11]</td>
-<td class="gt_row gt_right" headers="estimate">7.256405e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">sma1</td>
-<td class="gt_row gt_right" headers="estimate">-6.581359e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">constant</td>
-<td class="gt_row gt_right" headers="estimate">4.695784e+01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">(Intercept)</td>
-<td class="gt_row gt_right" headers="estimate">2.679654e+03</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">trend()</td>
-<td class="gt_row gt_right" headers="estimate">-1.041877e+01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year2</td>
-<td class="gt_row gt_right" headers="estimate">3.611331e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year3</td>
-<td class="gt_row gt_right" headers="estimate">7.919804e+02</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year4</td>
-<td class="gt_row gt_right" headers="estimate">1.048399e+03</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year5</td>
-<td class="gt_row gt_right" headers="estimate">1.619389e+03</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year6</td>
-<td class="gt_row gt_right" headers="estimate">1.691237e+03</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year7</td>
-<td class="gt_row gt_right" headers="estimate">2.410013e+03</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year8</td>
-<td class="gt_row gt_right" headers="estimate">2.116217e+03</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year9</td>
-<td class="gt_row gt_right" headers="estimate">1.115707e+03</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year10</td>
-<td class="gt_row gt_right" headers="estimate">9.221975e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year11</td>
-<td class="gt_row gt_right" headers="estimate">1.373616e+03</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year12</td>
-<td class="gt_row gt_right" headers="estimate">1.583178e+03</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">alpha</td>
-<td class="gt_row gt_right" headers="estimate">2.425685e-02</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">beta</td>
-<td class="gt_row gt_right" headers="estimate">1.065897e-03</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">gamma</td>
-<td class="gt_row gt_right" headers="estimate">1.128372e-04</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">l[0]</td>
-<td class="gt_row gt_right" headers="estimate">4.049403e+03</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">b[0]</td>
-<td class="gt_row gt_right" headers="estimate">-1.210168e+01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[0]</td>
-<td class="gt_row gt_right" headers="estimate">1.136913e+00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-1]</td>
-<td class="gt_row gt_right" headers="estimate">1.037251e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-2]</td>
-<td class="gt_row gt_right" headers="estimate">8.856814e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-3]</td>
-<td class="gt_row gt_right" headers="estimate">9.521513e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-4]</td>
-<td class="gt_row gt_right" headers="estimate">1.276195e+00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-5]</td>
-<td class="gt_row gt_right" headers="estimate">1.369725e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-6]</td>
-<td class="gt_row gt_right" headers="estimate">1.144289e+00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-7]</td>
-<td class="gt_row gt_right" headers="estimate">1.112144e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-8]</td>
-<td class="gt_row gt_right" headers="estimate">9.334563e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-9]</td>
-<td class="gt_row gt_right" headers="estimate">8.625533e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-10]</td>
-<td class="gt_row gt_right" headers="estimate">7.041093e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-11]</td>
-<td class="gt_row gt_right" headers="estimate">5.855304e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">sar1</td>
-<td class="gt_row gt_right" headers="estimate">2.985697e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">sar2</td>
-<td class="gt_row gt_right" headers="estimate">8.510241e-02</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">sma1</td>
-<td class="gt_row gt_right" headers="estimate">-8.343419e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">constant</td>
-<td class="gt_row gt_right" headers="estimate">-7.631148e+01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">(Intercept)</td>
-<td class="gt_row gt_right" headers="estimate">1.550157e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">trend()</td>
-<td class="gt_row gt_right" headers="estimate">8.379548e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year2</td>
-<td class="gt_row gt_right" headers="estimate">2.690490e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year3</td>
-<td class="gt_row gt_right" headers="estimate">4.909552e+02</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year4</td>
-<td class="gt_row gt_right" headers="estimate">5.952899e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year5</td>
-<td class="gt_row gt_right" headers="estimate">8.111247e+02</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year6</td>
-<td class="gt_row gt_right" headers="estimate">8.423165e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year7</td>
-<td class="gt_row gt_right" headers="estimate">1.255366e+03</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year8</td>
-<td class="gt_row gt_right" headers="estimate">1.213629e+03</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year9</td>
-<td class="gt_row gt_right" headers="estimate">7.748208e+02</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year10</td>
-<td class="gt_row gt_right" headers="estimate">6.275841e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year11</td>
-<td class="gt_row gt_right" headers="estimate">7.729902e+02</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year12</td>
-<td class="gt_row gt_right" headers="estimate">8.892535e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">alpha</td>
-<td class="gt_row gt_right" headers="estimate">1.151725e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">beta</td>
-<td class="gt_row gt_right" headers="estimate">2.080879e-04</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">gamma</td>
-<td class="gt_row gt_right" headers="estimate">1.015728e-04</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">l[0]</td>
-<td class="gt_row gt_right" headers="estimate">9.307426e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">b[0]</td>
-<td class="gt_row gt_right" headers="estimate">7.243255e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[0]</td>
-<td class="gt_row gt_right" headers="estimate">1.099435e+00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-1]</td>
-<td class="gt_row gt_right" headers="estimate">1.030543e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-2]</td>
-<td class="gt_row gt_right" headers="estimate">9.503719e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-3]</td>
-<td class="gt_row gt_right" headers="estimate">1.028809e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-4]</td>
-<td class="gt_row gt_right" headers="estimate">1.351961e+00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-5]</td>
-<td class="gt_row gt_right" headers="estimate">1.339093e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-6]</td>
-<td class="gt_row gt_right" headers="estimate">1.091867e+00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-7]</td>
-<td class="gt_row gt_right" headers="estimate">1.075853e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-8]</td>
-<td class="gt_row gt_right" headers="estimate">9.254713e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-9]</td>
-<td class="gt_row gt_right" headers="estimate">8.518950e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-10]</td>
-<td class="gt_row gt_right" headers="estimate">7.232514e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-11]</td>
-<td class="gt_row gt_right" headers="estimate">5.314488e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">ar1</td>
-<td class="gt_row gt_right" headers="estimate">9.335144e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">ma1</td>
-<td class="gt_row gt_right" headers="estimate">-8.338887e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">sma1</td>
-<td class="gt_row gt_right" headers="estimate">-6.390377e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">constant</td>
-<td class="gt_row gt_right" headers="estimate">6.349806e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">(Intercept)</td>
-<td class="gt_row gt_right" headers="estimate">1.125977e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">trend()</td>
-<td class="gt_row gt_right" headers="estimate">-5.536783e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year2</td>
-<td class="gt_row gt_right" headers="estimate">1.133939e+01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year3</td>
-<td class="gt_row gt_right" headers="estimate">1.960736e+01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year4</td>
-<td class="gt_row gt_right" headers="estimate">1.101818e+01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year5</td>
-<td class="gt_row gt_right" headers="estimate">1.742900e+01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year6</td>
-<td class="gt_row gt_right" headers="estimate">2.333982e+01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year7</td>
-<td class="gt_row gt_right" headers="estimate">3.446493e+01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year8</td>
-<td class="gt_row gt_right" headers="estimate">3.516146e+01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year9</td>
-<td class="gt_row gt_right" headers="estimate">3.228657e+01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year10</td>
-<td class="gt_row gt_right" headers="estimate">3.112596e+01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year11</td>
-<td class="gt_row gt_right" headers="estimate">4.646535e+01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year12</td>
-<td class="gt_row gt_right" headers="estimate">8.651903e+01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">alpha</td>
-<td class="gt_row gt_right" headers="estimate">1.312617e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">beta</td>
-<td class="gt_row gt_right" headers="estimate">1.406875e-04</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">gamma</td>
-<td class="gt_row gt_right" headers="estimate">1.781227e-03</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">l[0]</td>
-<td class="gt_row gt_right" headers="estimate">1.502374e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">b[0]</td>
-<td class="gt_row gt_right" headers="estimate">-5.555894e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[0]</td>
-<td class="gt_row gt_right" headers="estimate">1.619832e+00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-1]</td>
-<td class="gt_row gt_right" headers="estimate">1.209908e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-2]</td>
-<td class="gt_row gt_right" headers="estimate">1.036982e+00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-3]</td>
-<td class="gt_row gt_right" headers="estimate">1.001666e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-4]</td>
-<td class="gt_row gt_right" headers="estimate">1.042791e+00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-5]</td>
-<td class="gt_row gt_right" headers="estimate">1.050046e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-6]</td>
-<td class="gt_row gt_right" headers="estimate">9.110078e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-7]</td>
-<td class="gt_row gt_right" headers="estimate">8.751270e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-8]</td>
-<td class="gt_row gt_right" headers="estimate">8.518045e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-9]</td>
-<td class="gt_row gt_right" headers="estimate">9.114332e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-10]</td>
-<td class="gt_row gt_right" headers="estimate">8.196058e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-11]</td>
-<td class="gt_row gt_right" headers="estimate">6.697971e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">ar1</td>
-<td class="gt_row gt_right" headers="estimate">2.436489e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">ar2</td>
-<td class="gt_row gt_right" headers="estimate">-1.057373e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">ar3</td>
-<td class="gt_row gt_right" headers="estimate">1.438100e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">sar1</td>
-<td class="gt_row gt_right" headers="estimate">-6.175780e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">sar2</td>
-<td class="gt_row gt_right" headers="estimate">-2.220799e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">constant</td>
-<td class="gt_row gt_right" headers="estimate">-9.981627e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">(Intercept)</td>
-<td class="gt_row gt_right" headers="estimate">1.187423e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">trend()</td>
-<td class="gt_row gt_right" headers="estimate">1.120803e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year2</td>
-<td class="gt_row gt_right" headers="estimate">-8.763660e+00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year3</td>
-<td class="gt_row gt_right" headers="estimate">-2.241606e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year4</td>
-<td class="gt_row gt_right" headers="estimate">4.923306e+00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year5</td>
-<td class="gt_row gt_right" headers="estimate">-6.411783e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year6</td>
-<td class="gt_row gt_right" headers="estimate">-1.996116e+01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year7</td>
-<td class="gt_row gt_right" headers="estimate">4.913233e+01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year8</td>
-<td class="gt_row gt_right" headers="estimate">4.936867e+01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year9</td>
-<td class="gt_row gt_right" headers="estimate">4.374786e+01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year10</td>
-<td class="gt_row gt_right" headers="estimate">4.026992e+01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year11</td>
-<td class="gt_row gt_right" headers="estimate">9.750626e+01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year12</td>
-<td class="gt_row gt_right" headers="estimate">1.589569e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">alpha</td>
-<td class="gt_row gt_right" headers="estimate">5.308921e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">beta</td>
-<td class="gt_row gt_right" headers="estimate">1.805540e-04</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">gamma</td>
-<td class="gt_row gt_right" headers="estimate">1.317933e-04</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">l[0]</td>
-<td class="gt_row gt_right" headers="estimate">1.121389e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">b[0]</td>
-<td class="gt_row gt_right" headers="estimate">6.625593e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[0]</td>
-<td class="gt_row gt_right" headers="estimate">1.455572e+00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-1]</td>
-<td class="gt_row gt_right" headers="estimate">1.239508e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-2]</td>
-<td class="gt_row gt_right" headers="estimate">1.018031e+00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-3]</td>
-<td class="gt_row gt_right" headers="estimate">1.036081e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-4]</td>
-<td class="gt_row gt_right" headers="estimate">1.120658e+00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-5]</td>
-<td class="gt_row gt_right" headers="estimate">1.078534e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-6]</td>
-<td class="gt_row gt_right" headers="estimate">7.740938e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-7]</td>
-<td class="gt_row gt_right" headers="estimate">8.167812e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-8]</td>
-<td class="gt_row gt_right" headers="estimate">8.806291e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-9]</td>
-<td class="gt_row gt_right" headers="estimate">8.791414e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-10]</td>
-<td class="gt_row gt_right" headers="estimate">8.320005e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-11]</td>
-<td class="gt_row gt_right" headers="estimate">8.689697e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">ar1</td>
-<td class="gt_row gt_right" headers="estimate">5.147340e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">ar2</td>
-<td class="gt_row gt_right" headers="estimate">3.840141e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">sma1</td>
-<td class="gt_row gt_right" headers="estimate">-5.791435e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">(Intercept)</td>
-<td class="gt_row gt_right" headers="estimate">1.448543e+03</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">trend()</td>
-<td class="gt_row gt_right" headers="estimate">2.471429e+00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year2</td>
-<td class="gt_row gt_right" headers="estimate">-7.932857e+01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year3</td>
-<td class="gt_row gt_right" headers="estimate">2.249143e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year4</td>
-<td class="gt_row gt_right" headers="estimate">1.189429e+02</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year5</td>
-<td class="gt_row gt_right" headers="estimate">-6.174286e+01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year6</td>
-<td class="gt_row gt_right" headers="estimate">-2.139286e+02</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year7</td>
-<td class="gt_row gt_right" headers="estimate">2.993857e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year8</td>
-<td class="gt_row gt_right" headers="estimate">6.019143e+02</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year9</td>
-<td class="gt_row gt_right" headers="estimate">4.492286e+02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year10</td>
-<td class="gt_row gt_right" headers="estimate">1.331686e+03</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year11</td>
-<td class="gt_row gt_right" headers="estimate">2.457786e+03</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
-<td class="gt_row gt_left" headers="term">season()year12</td>
-<td class="gt_row gt_right" headers="estimate">4.128886e+03</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">alpha</td>
-<td class="gt_row gt_right" headers="estimate">6.865049e-02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">gamma</td>
-<td class="gt_row gt_right" headers="estimate">1.000729e-04</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">l[0]</td>
-<td class="gt_row gt_right" headers="estimate">2.333769e+03</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[0]</td>
-<td class="gt_row gt_right" headers="estimate">2.330989e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-1]</td>
-<td class="gt_row gt_right" headers="estimate">1.681006e+00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-2]</td>
-<td class="gt_row gt_right" headers="estimate">1.239721e+00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-3]</td>
-<td class="gt_row gt_right" headers="estimate">8.738231e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-4]</td>
-<td class="gt_row gt_right" headers="estimate">9.687017e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-5]</td>
-<td class="gt_row gt_right" headers="estimate">8.008275e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-6]</td>
-<td class="gt_row gt_right" headers="estimate">5.888510e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-7]</td>
-<td class="gt_row gt_right" headers="estimate">6.544557e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-8]</td>
-<td class="gt_row gt_right" headers="estimate">7.437916e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-9]</td>
-<td class="gt_row gt_right" headers="estimate">7.798798e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-10]</td>
-<td class="gt_row gt_right" headers="estimate">6.522038e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ETS</td>
-<td class="gt_row gt_left" headers="term">s[-11]</td>
-<td class="gt_row gt_right" headers="estimate">6.857497e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">ma1</td>
-<td class="gt_row gt_right" headers="estimate">1.743036e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">sma1</td>
-<td class="gt_row gt_right" headers="estimate">-4.746335e-01</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">sma2</td>
-<td class="gt_row gt_right" headers="estimate">-1.499220e-01</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=".model">ARIMA</td>
-<td class="gt_row gt_left" headers="term">constant</td>
-<td class="gt_row gt_right" headers="estimate">2.563495e+01</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
 </section>
 <section id="training-accuracy" class="level1">
 <h1>Training accuracy</h1>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fit <span class="sc">|&gt;</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">accuracy</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Varietal, .model, Varietal, RMSE, MAE, MAPE) <span class="sc">|&gt;</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(.model, Varietal) <span class="sc">|&gt;</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span> <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">2</span>)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fit <span class="sc">|&gt;</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">accuracy</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Varietal, .model, Varietal, RMSE, MAE, MAPE) <span class="sc">|&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(.model, Varietal) <span class="sc">|&gt;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span> <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">2</span>)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="csqwuaqwux" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#csqwuaqwux table {
+<div id="grpdapxwad" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#grpdapxwad table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#csqwuaqwux thead, #csqwuaqwux tbody, #csqwuaqwux tfoot, #csqwuaqwux tr, #csqwuaqwux td, #csqwuaqwux th {
+#grpdapxwad thead, #grpdapxwad tbody, #grpdapxwad tfoot, #grpdapxwad tr, #grpdapxwad td, #grpdapxwad th {
   border-style: none;
 }
 
-#csqwuaqwux p {
+#grpdapxwad p {
   margin: 0;
   padding: 0;
 }
 
-#csqwuaqwux .gt_table {
+#grpdapxwad .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1731,12 +271,12 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#csqwuaqwux .gt_caption {
+#grpdapxwad .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#csqwuaqwux .gt_title {
+#grpdapxwad .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1748,7 +288,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-bottom-width: 0;
 }
 
-#csqwuaqwux .gt_subtitle {
+#grpdapxwad .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1760,7 +300,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-top-width: 0;
 }
 
-#csqwuaqwux .gt_heading {
+#grpdapxwad .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1772,13 +312,13 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#csqwuaqwux .gt_bottom_border {
+#grpdapxwad .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#csqwuaqwux .gt_col_headings {
+#grpdapxwad .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1793,7 +333,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#csqwuaqwux .gt_col_heading {
+#grpdapxwad .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1813,7 +353,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   overflow-x: hidden;
 }
 
-#csqwuaqwux .gt_column_spanner_outer {
+#grpdapxwad .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1825,15 +365,15 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   padding-right: 4px;
 }
 
-#csqwuaqwux .gt_column_spanner_outer:first-child {
+#grpdapxwad .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#csqwuaqwux .gt_column_spanner_outer:last-child {
+#grpdapxwad .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#csqwuaqwux .gt_column_spanner {
+#grpdapxwad .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1845,11 +385,11 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   width: 100%;
 }
 
-#csqwuaqwux .gt_spanner_row {
+#grpdapxwad .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#csqwuaqwux .gt_group_heading {
+#grpdapxwad .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1875,7 +415,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   text-align: left;
 }
 
-#csqwuaqwux .gt_empty_group_heading {
+#grpdapxwad .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1890,15 +430,15 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   vertical-align: middle;
 }
 
-#csqwuaqwux .gt_from_md > :first-child {
+#grpdapxwad .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#csqwuaqwux .gt_from_md > :last-child {
+#grpdapxwad .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#csqwuaqwux .gt_row {
+#grpdapxwad .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1917,7 +457,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   overflow-x: hidden;
 }
 
-#csqwuaqwux .gt_stub {
+#grpdapxwad .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1930,7 +470,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   padding-right: 5px;
 }
 
-#csqwuaqwux .gt_stub_row_group {
+#grpdapxwad .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1944,15 +484,15 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   vertical-align: top;
 }
 
-#csqwuaqwux .gt_row_group_first td {
+#grpdapxwad .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#csqwuaqwux .gt_row_group_first th {
+#grpdapxwad .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#csqwuaqwux .gt_summary_row {
+#grpdapxwad .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1962,16 +502,16 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   padding-right: 5px;
 }
 
-#csqwuaqwux .gt_first_summary_row {
+#grpdapxwad .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#csqwuaqwux .gt_first_summary_row.thick {
+#grpdapxwad .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#csqwuaqwux .gt_last_summary_row {
+#grpdapxwad .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1981,7 +521,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#csqwuaqwux .gt_grand_summary_row {
+#grpdapxwad .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1991,7 +531,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   padding-right: 5px;
 }
 
-#csqwuaqwux .gt_first_grand_summary_row {
+#grpdapxwad .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2001,7 +541,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#csqwuaqwux .gt_last_grand_summary_row_top {
+#grpdapxwad .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2011,11 +551,11 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#csqwuaqwux .gt_striped {
+#grpdapxwad .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#csqwuaqwux .gt_table_body {
+#grpdapxwad .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2024,7 +564,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#csqwuaqwux .gt_footnotes {
+#grpdapxwad .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2038,7 +578,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#csqwuaqwux .gt_footnote {
+#grpdapxwad .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2047,7 +587,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   padding-right: 5px;
 }
 
-#csqwuaqwux .gt_sourcenotes {
+#grpdapxwad .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2061,7 +601,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#csqwuaqwux .gt_sourcenote {
+#grpdapxwad .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2069,72 +609,72 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   padding-right: 5px;
 }
 
-#csqwuaqwux .gt_left {
+#grpdapxwad .gt_left {
   text-align: left;
 }
 
-#csqwuaqwux .gt_center {
+#grpdapxwad .gt_center {
   text-align: center;
 }
 
-#csqwuaqwux .gt_right {
+#grpdapxwad .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#csqwuaqwux .gt_font_normal {
+#grpdapxwad .gt_font_normal {
   font-weight: normal;
 }
 
-#csqwuaqwux .gt_font_bold {
+#grpdapxwad .gt_font_bold {
   font-weight: bold;
 }
 
-#csqwuaqwux .gt_font_italic {
+#grpdapxwad .gt_font_italic {
   font-style: italic;
 }
 
-#csqwuaqwux .gt_super {
+#grpdapxwad .gt_super {
   font-size: 65%;
 }
 
-#csqwuaqwux .gt_footnote_marks {
+#grpdapxwad .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#csqwuaqwux .gt_asterisk {
+#grpdapxwad .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#csqwuaqwux .gt_indent_1 {
+#grpdapxwad .gt_indent_1 {
   text-indent: 5px;
 }
 
-#csqwuaqwux .gt_indent_2 {
+#grpdapxwad .gt_indent_2 {
   text-indent: 10px;
 }
 
-#csqwuaqwux .gt_indent_3 {
+#grpdapxwad .gt_indent_3 {
   text-indent: 15px;
 }
 
-#csqwuaqwux .gt_indent_4 {
+#grpdapxwad .gt_indent_4 {
   text-indent: 20px;
 }
 
-#csqwuaqwux .gt_indent_5 {
+#grpdapxwad .gt_indent_5 {
   text-indent: 25px;
 }
 
-#csqwuaqwux .katex-display {
+#grpdapxwad .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#csqwuaqwux div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#grpdapxwad div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2286,31 +826,31 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
 <section id="forecasting-accuracy" class="level1">
 <h1>Forecasting accuracy</h1>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fc <span class="ot">&lt;-</span> fit <span class="sc">|&gt;</span> </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">forecast</span>(test)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>fc <span class="sc">|&gt;</span> </span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">accuracy</span>(test) <span class="sc">|&gt;</span> </span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Varietal, .model, Varietal, RMSE, MAE, MAPE) <span class="sc">|&gt;</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(.model, Varietal) <span class="sc">|&gt;</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span> <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fc <span class="ot">&lt;-</span> fit <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">forecast</span>(test)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>fc <span class="sc">|&gt;</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">accuracy</span>(test) <span class="sc">|&gt;</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Varietal, .model, Varietal, RMSE, MAE, MAPE) <span class="sc">|&gt;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(.model, Varietal) <span class="sc">|&gt;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span> <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="eufjqmnjdp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#eufjqmnjdp table {
+<div id="lykrbodenp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#lykrbodenp table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#eufjqmnjdp thead, #eufjqmnjdp tbody, #eufjqmnjdp tfoot, #eufjqmnjdp tr, #eufjqmnjdp td, #eufjqmnjdp th {
+#lykrbodenp thead, #lykrbodenp tbody, #lykrbodenp tfoot, #lykrbodenp tr, #lykrbodenp td, #lykrbodenp th {
   border-style: none;
 }
 
-#eufjqmnjdp p {
+#lykrbodenp p {
   margin: 0;
   padding: 0;
 }
 
-#eufjqmnjdp .gt_table {
+#lykrbodenp .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2336,12 +876,12 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#eufjqmnjdp .gt_caption {
+#lykrbodenp .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#eufjqmnjdp .gt_title {
+#lykrbodenp .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2353,7 +893,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-bottom-width: 0;
 }
 
-#eufjqmnjdp .gt_subtitle {
+#lykrbodenp .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2365,7 +905,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-top-width: 0;
 }
 
-#eufjqmnjdp .gt_heading {
+#lykrbodenp .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2377,13 +917,13 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#eufjqmnjdp .gt_bottom_border {
+#lykrbodenp .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#eufjqmnjdp .gt_col_headings {
+#lykrbodenp .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2398,7 +938,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#eufjqmnjdp .gt_col_heading {
+#lykrbodenp .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2418,7 +958,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   overflow-x: hidden;
 }
 
-#eufjqmnjdp .gt_column_spanner_outer {
+#lykrbodenp .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2430,15 +970,15 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   padding-right: 4px;
 }
 
-#eufjqmnjdp .gt_column_spanner_outer:first-child {
+#lykrbodenp .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#eufjqmnjdp .gt_column_spanner_outer:last-child {
+#lykrbodenp .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#eufjqmnjdp .gt_column_spanner {
+#lykrbodenp .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2450,11 +990,11 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   width: 100%;
 }
 
-#eufjqmnjdp .gt_spanner_row {
+#lykrbodenp .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#eufjqmnjdp .gt_group_heading {
+#lykrbodenp .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2480,7 +1020,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   text-align: left;
 }
 
-#eufjqmnjdp .gt_empty_group_heading {
+#lykrbodenp .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2495,15 +1035,15 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   vertical-align: middle;
 }
 
-#eufjqmnjdp .gt_from_md > :first-child {
+#lykrbodenp .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#eufjqmnjdp .gt_from_md > :last-child {
+#lykrbodenp .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#eufjqmnjdp .gt_row {
+#lykrbodenp .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2522,7 +1062,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   overflow-x: hidden;
 }
 
-#eufjqmnjdp .gt_stub {
+#lykrbodenp .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2535,7 +1075,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   padding-right: 5px;
 }
 
-#eufjqmnjdp .gt_stub_row_group {
+#lykrbodenp .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2549,15 +1089,15 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   vertical-align: top;
 }
 
-#eufjqmnjdp .gt_row_group_first td {
+#lykrbodenp .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#eufjqmnjdp .gt_row_group_first th {
+#lykrbodenp .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#eufjqmnjdp .gt_summary_row {
+#lykrbodenp .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2567,16 +1107,16 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   padding-right: 5px;
 }
 
-#eufjqmnjdp .gt_first_summary_row {
+#lykrbodenp .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#eufjqmnjdp .gt_first_summary_row.thick {
+#lykrbodenp .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#eufjqmnjdp .gt_last_summary_row {
+#lykrbodenp .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2586,7 +1126,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#eufjqmnjdp .gt_grand_summary_row {
+#lykrbodenp .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2596,7 +1136,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   padding-right: 5px;
 }
 
-#eufjqmnjdp .gt_first_grand_summary_row {
+#lykrbodenp .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2606,7 +1146,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#eufjqmnjdp .gt_last_grand_summary_row_top {
+#lykrbodenp .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2616,11 +1156,11 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#eufjqmnjdp .gt_striped {
+#lykrbodenp .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#eufjqmnjdp .gt_table_body {
+#lykrbodenp .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2629,7 +1169,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#eufjqmnjdp .gt_footnotes {
+#lykrbodenp .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2643,7 +1183,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#eufjqmnjdp .gt_footnote {
+#lykrbodenp .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2652,7 +1192,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   padding-right: 5px;
 }
 
-#eufjqmnjdp .gt_sourcenotes {
+#lykrbodenp .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2666,7 +1206,7 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#eufjqmnjdp .gt_sourcenote {
+#lykrbodenp .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2674,72 +1214,72 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
   padding-right: 5px;
 }
 
-#eufjqmnjdp .gt_left {
+#lykrbodenp .gt_left {
   text-align: left;
 }
 
-#eufjqmnjdp .gt_center {
+#lykrbodenp .gt_center {
   text-align: center;
 }
 
-#eufjqmnjdp .gt_right {
+#lykrbodenp .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#eufjqmnjdp .gt_font_normal {
+#lykrbodenp .gt_font_normal {
   font-weight: normal;
 }
 
-#eufjqmnjdp .gt_font_bold {
+#lykrbodenp .gt_font_bold {
   font-weight: bold;
 }
 
-#eufjqmnjdp .gt_font_italic {
+#lykrbodenp .gt_font_italic {
   font-style: italic;
 }
 
-#eufjqmnjdp .gt_super {
+#lykrbodenp .gt_super {
   font-size: 65%;
 }
 
-#eufjqmnjdp .gt_footnote_marks {
+#lykrbodenp .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#eufjqmnjdp .gt_asterisk {
+#lykrbodenp .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#eufjqmnjdp .gt_indent_1 {
+#lykrbodenp .gt_indent_1 {
   text-indent: 5px;
 }
 
-#eufjqmnjdp .gt_indent_2 {
+#lykrbodenp .gt_indent_2 {
   text-indent: 10px;
 }
 
-#eufjqmnjdp .gt_indent_3 {
+#lykrbodenp .gt_indent_3 {
   text-indent: 15px;
 }
 
-#eufjqmnjdp .gt_indent_4 {
+#lykrbodenp .gt_indent_4 {
   text-indent: 20px;
 }
 
-#eufjqmnjdp .gt_indent_5 {
+#lykrbodenp .gt_indent_5 {
   text-indent: 25px;
 }
 
-#eufjqmnjdp .katex-display {
+#lykrbodenp .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#eufjqmnjdp div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#lykrbodenp div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2891,16 +1431,16 @@ ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
 <section id="forecast-visualization" class="level1">
 <h1>Forecast visualization</h1>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fc <span class="sc">|&gt;</span> </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">autoplot</span>(train <span class="sc">|&gt;</span> <span class="fu">filter</span>(Month <span class="sc">&gt;=</span> <span class="fu">yearmonth</span>(<span class="st">"1993 Jan"</span>))) <span class="sc">+</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> Varietal, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol=</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Australian Wine Sales Forecasts by Varietal"</span>,</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Sales"</span>, <span class="at">x =</span> <span class="st">"Month"</span>) <span class="sc">+</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fc <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">autoplot</span>(train <span class="sc">|&gt;</span> <span class="fu">filter</span>(Month <span class="sc">&gt;=</span> <span class="fu">yearmonth</span>(<span class="st">"1993 Jan"</span>))) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> Varietal, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Australian Wine Sales Forecasts by Varietal"</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Sales"</span>, <span class="at">x =</span> <span class="st">"Month"</span>) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="aus-wine-sales-variety_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="aus-wine-sales-variety_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

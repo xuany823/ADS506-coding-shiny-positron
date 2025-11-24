@@ -1,6 +1,8 @@
 ---
-title: "Untitled"
+title: "ADS 506 — Week 5 Submission: Storytelling with Shiny Apps"
 format: html
+author: "Michelle Wang"
+date: "June 10, 2024"
 ---
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -43,8 +45,8 @@ train <- aus_wine_ts |> filter_index("1980 Jan" ~ "1993 Dec")
 test <- aus_wine_ts |> filter_index("1994 Jan" ~ "1994 Dec")
 ```
 
-
 # Model fitting
+
 Built multiple models for each varietal using auto ETS and auto ARIMA.
 
 ```{r}
@@ -56,8 +58,7 @@ fit <- train |>
 fit |> t()
 ```
 
-The fitted models successfully report the required specifications: each varietal includes an ETS component form (e.g., ETS(M,A,M)) and a clearly identified ARIMA structure with full seasonal orders (e.g., ARIMA(0,0,0)(0,1,1)[12] w/ drift), which meets the MVP requirement for model specification.
-
+The fitted models successfully report the required specifications: each varietal includes an ETS component form (e.g., ETS(M,A,M)) and a clearly identified ARIMA structure with full seasonal orders (e.g., ARIMA(0,0,0)(0,1,1)\[12\] w/ drift), which meets the MVP requirement for model specification.
 
 # Training accuracy
 
@@ -81,8 +82,6 @@ fc |>
     gt() |> fmt_number(decimals = 2)
 ```
 
-
-
 # Forecast visualization
 
 ```{r}
@@ -93,6 +92,5 @@ fc |>
     y = "Sales", x = "Month") +
         theme_minimal()
 ```
-
 
 # Report generation
