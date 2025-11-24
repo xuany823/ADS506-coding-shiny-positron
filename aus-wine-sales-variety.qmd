@@ -68,9 +68,9 @@ data_trn <- aus_wine_ts |>
 
 ## Tab2 - Modeling Building
 
-Imputs:
+Inputs:
 
--   Toggle for model type: TSLM, ETS, ARIMA
+-   Toggle for model type: TSLM, ETS, ARIMA and specifications table
 -   Toggle training accuracy
 -   Toggle forecasting accuracy
 
