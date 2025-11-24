@@ -16,8 +16,15 @@ library(tidyverse)
 
 ### Data import / preparation
 
+Inputs
+
+-   Multiselct for varietals to display (default all display and selected with checkbox)
+-   Date range selector
+    -   First date selection fixed at January 1980
+    -   Last date selection fixed at December 1994
+
 ```{r}
-aus_wine <- read_csv(here::here("data/AustralianWines.csv"),
+aus_wine <- read_csv("data/AustralianWines.csv"),
 col_types = cols(Rose = col_number()), show_col_types = FALSE) |> 
     fill(Rose, .direction = "down") |> 
     mutate(Month = mdy(str_replace(Month, '-', '-01-')) |> yearmonth()) 
@@ -52,7 +59,13 @@ test <- aus_wine_ts |> filter_index("1994 Jan" ~ "1994 Dec")
 
 ## Tab2 - Modeling Building
 
-Imputs: \* Toggle for model type: TSLM, ETS, ARIMA \* Toggle training accuracy \* Toggle forecasting accuracy \* Forecast visualization \### Model fitting
+Imputs:
+
+-   Toggle for model type: TSLM, ETS, ARIMA
+-   Toggle training accuracy
+-   Toggle forecasting accuracy
+
+### Model fitting
 
 Built multiple models for each varietal using TSLM, auto ETS and auto ARIMA.
 
@@ -91,7 +104,8 @@ fc |>
 
 ## Tab3 - Forecast
 
-Inputs: \* User can select model type for forecast visualization and forecast table (TSLM, ETS, ARIMA)
+Inputs:\
+\* User can select model type for forecast visualization and forecast table (TSLM, ETS, ARIMA)
 
 ### Forecast visualization
 

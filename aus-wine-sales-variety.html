@@ -9,7 +9,7 @@
 <meta name="author" content="Michelle Wang">
 <meta name="dcterms.date" content="2024-06-10">
 
-<title>ADS 506 — Week 5 Submission: Storytelling with Shiny Apps</title>
+<title>ADS 506 - Week 5 Submission: Storytelling with Shiny Apps</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -84,7 +84,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">ADS 506 — Week 5 Submission: Storytelling with Shiny Apps</h1>
+<h1 class="title">ADS 506 - Week 5 Submission: Storytelling with Shiny Apps</h1>
 </div>
 
 
@@ -117,6 +117,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="tab1---visualization">Tab1 - Visualization</h2>
 <section id="data-import-preparation" class="level3">
 <h3 class="anchored" data-anchor-id="data-import-preparation">Data import / preparation</h3>
+<p>Inputs</p>
+<ul>
+<li>multiselct for varietals</li>
+<li>Date range selector
+<ul>
+<li>First date selection fixed at January 1980</li>
+<li>Last date selection fixed at December 1994</li>
+</ul></li>
+</ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>aus_wine <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/AustralianWines.csv"</span>),</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="at">col_types =</span> <span class="fu">cols</span>(<span class="at">Rose =</span> <span class="fu">col_number</span>()), <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> </span>
