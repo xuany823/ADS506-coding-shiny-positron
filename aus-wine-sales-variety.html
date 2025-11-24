@@ -1,0 +1,3320 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.24">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Untitled</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="aus-wine-sales-variety_files/libs/clipboard/clipboard.min.js"></script>
+<script src="aus-wine-sales-variety_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="aus-wine-sales-variety_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="aus-wine-sales-variety_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="aus-wine-sales-variety_files/libs/quarto-html/popper.min.js"></script>
+<script src="aus-wine-sales-variety_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="aus-wine-sales-variety_files/libs/quarto-html/anchor.min.js"></script>
+<link href="aus-wine-sales-variety_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="aus-wine-sales-variety_files/libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="aus-wine-sales-variety_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="aus-wine-sales-variety_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="aus-wine-sales-variety_files/libs/bootstrap/bootstrap-d6a003b94517c951b2d65075d42fb01b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Untitled</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="data-import-preparation" class="level1">
+<h1>Data import / preparation</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>aus_wine <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/AustralianWines.csv"</span>),</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="at">col_types =</span> <span class="fu">cols</span>(<span class="at">Rose =</span> <span class="fu">col_number</span>()), <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fill</span>(Rose, <span class="at">.direction =</span> <span class="st">"down"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Month =</span> <span class="fu">mdy</span>(<span class="fu">str_replace</span>(Month, <span class="st">'-'</span>, <span class="st">'-01-'</span>)) <span class="sc">|&gt;</span> <span class="fu">yearmonth</span>()) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details,
+e.g.:
+  dat &lt;- vroom(...)
+  problems(dat)</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>aus_wine_ts <span class="ot">&lt;-</span> aus_wine <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>Month, <span class="at">names_to =</span> <span class="st">'Varietal'</span>, <span class="at">values_to =</span> <span class="st">'Sales'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tsibble</span>(<span class="at">index =</span> Month, <span class="at">key =</span> Varietal)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>aus_wine_ts</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tsibble: 1,080 x 3 [1M]
+# Key:       Varietal [6]
+      Month Varietal  Sales
+      &lt;mth&gt; &lt;chr&gt;     &lt;dbl&gt;
+ 1 1980 Jan Dry white  1954
+ 2 1980 Feb Dry white  2302
+ 3 1980 Mar Dry white  3054
+ 4 1980 Apr Dry white  2414
+ 5 1980 May Dry white  2226
+ 6 1980 Jun Dry white  2725
+ 7 1980 Jul Dry white  2589
+ 8 1980 Aug Dry white  3470
+ 9 1980 Sep Dry white  2400
+10 1980 Oct Dry white  3180
+# ℹ 1,070 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="data-visualization" class="level1">
+<h1>Data visualization</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize with autoplot</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>aus_wine_ts <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">autoplot</span>(Sales) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> Varietal, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Month"</span>, <span class="at">y =</span> <span class="st">"Sales"</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="aus-wine-sales-variety_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="data-splitting" class="level1">
+<h1>Data Splitting</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># training and test sets</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> aus_wine_ts <span class="sc">|&gt;</span> <span class="fu">filter_index</span>(<span class="st">"1980 Jan"</span> <span class="sc">~</span> <span class="st">"1993 Dec"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> aus_wine_ts <span class="sc">|&gt;</span> <span class="fu">filter_index</span>(<span class="st">"1994 Jan"</span> <span class="sc">~</span> <span class="st">"1994 Dec"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="model-fitting" class="level1">
+<h1>Model fitting</h1>
+<p>Built multiple models for each varietal using auto ETS and auto ARIMA.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> train <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">model</span>(<span class="fu">TSLM</span>(Sales <span class="sc">~</span> <span class="fu">trend</span>() <span class="sc">+</span> <span class="fu">season</span>()),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ETS =</span> <span class="fu">ETS</span>(Sales),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">ARIMA =</span> <span class="fu">ARIMA</span>(Sales))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>fit <span class="sc">|&gt;</span> <span class="fu">t</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                 [,1]                            
+Varietal                         "Dry white"                     
+TSLM(Sales ~ trend() + season()) TSLM                            
+ETS                              ETS(M,N,M)                      
+ARIMA                            ARIMA(0,0,0)(0,1,1)[12] w/ drift
+                                 [,2]                            
+Varietal                         "Fortified"                     
+TSLM(Sales ~ trend() + season()) TSLM                            
+ETS                              ETS(M,A,M)                      
+ARIMA                            ARIMA(0,0,0)(2,1,1)[12] w/ drift
+                                 [,3]                            
+Varietal                         "Red"                           
+TSLM(Sales ~ trend() + season()) TSLM                            
+ETS                              ETS(M,A,M)                      
+ARIMA                            ARIMA(1,0,1)(0,1,1)[12] w/ drift
+                                 [,4]                            
+Varietal                         "Rose"                          
+TSLM(Sales ~ trend() + season()) TSLM                            
+ETS                              ETS(M,A,M)                      
+ARIMA                            ARIMA(3,0,0)(2,1,0)[12] w/ drift
+                                 [,5]                   
+Varietal                         "Sweet white"          
+TSLM(Sales ~ trend() + season()) TSLM                   
+ETS                              ETS(M,A,M)             
+ARIMA                            ARIMA(2,0,0)(0,1,1)[12]
+                                 [,6]                            
+Varietal                         "sparkling"                     
+TSLM(Sales ~ trend() + season()) TSLM                            
+ETS                              ETS(M,N,M)                      
+ARIMA                            ARIMA(0,0,1)(0,1,2)[12] w/ drift</code></pre>
+</div>
+</div>
+<p>The fitted models successfully report the required specifications: each varietal includes an ETS component form (e.g., ETS(M,A,M)) and a clearly identified ARIMA structure with full seasonal orders (e.g., ARIMA(0,0,0)(0,1,1)[12] w/ drift), which meets the MVP requirement for model specification.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>param_tbl <span class="ot">&lt;-</span> fit <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="sc">|&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(.model, term, estimate)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>param_tbl <span class="sc">|&gt;</span> </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Model Parameters by Varietal and Model Type"</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="nhsblgxzny" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#nhsblgxzny table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#nhsblgxzny thead, #nhsblgxzny tbody, #nhsblgxzny tfoot, #nhsblgxzny tr, #nhsblgxzny td, #nhsblgxzny th {
+  border-style: none;
+}
+
+#nhsblgxzny p {
+  margin: 0;
+  padding: 0;
+}
+
+#nhsblgxzny .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#nhsblgxzny .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#nhsblgxzny .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#nhsblgxzny .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#nhsblgxzny .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#nhsblgxzny .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nhsblgxzny .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#nhsblgxzny .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#nhsblgxzny .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#nhsblgxzny .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#nhsblgxzny .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#nhsblgxzny .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#nhsblgxzny .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#nhsblgxzny .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#nhsblgxzny .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#nhsblgxzny .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#nhsblgxzny .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#nhsblgxzny .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#nhsblgxzny .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nhsblgxzny .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#nhsblgxzny .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#nhsblgxzny .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#nhsblgxzny .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nhsblgxzny .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#nhsblgxzny .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#nhsblgxzny .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nhsblgxzny .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nhsblgxzny .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#nhsblgxzny .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nhsblgxzny .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#nhsblgxzny .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nhsblgxzny .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#nhsblgxzny .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nhsblgxzny .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#nhsblgxzny .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nhsblgxzny .gt_left {
+  text-align: left;
+}
+
+#nhsblgxzny .gt_center {
+  text-align: center;
+}
+
+#nhsblgxzny .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#nhsblgxzny .gt_font_normal {
+  font-weight: normal;
+}
+
+#nhsblgxzny .gt_font_bold {
+  font-weight: bold;
+}
+
+#nhsblgxzny .gt_font_italic {
+  font-style: italic;
+}
+
+#nhsblgxzny .gt_super {
+  font-size: 65%;
+}
+
+#nhsblgxzny .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#nhsblgxzny .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#nhsblgxzny .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#nhsblgxzny .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#nhsblgxzny .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#nhsblgxzny .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#nhsblgxzny .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#nhsblgxzny .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#nhsblgxzny div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="3" class="gt_heading gt_title gt_font_normal gt_bottom_border">Model Parameters by Varietal and Model Type</td>
+</tr>
+<tr class="gt_col_headings even">
+<th id="a.model" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">.model</th>
+<th id="term" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">term</th>
+<th id="estimate" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">estimate</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">(Intercept)</td>
+<td class="gt_row gt_right" headers="estimate">1.974641e+03</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">trend()</td>
+<td class="gt_row gt_right" headers="estimate">3.924069e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year2</td>
+<td class="gt_row gt_right" headers="estimate">3.900045e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year3</td>
+<td class="gt_row gt_right" headers="estimate">7.490090e+02</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year4</td>
+<td class="gt_row gt_right" headers="estimate">4.886564e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year5</td>
+<td class="gt_row gt_right" headers="estimate">5.930894e+02</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year6</td>
+<td class="gt_row gt_right" headers="estimate">5.146654e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year7</td>
+<td class="gt_row gt_right" headers="estimate">9.702413e+02</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year8</td>
+<td class="gt_row gt_right" headers="estimate">1.271889e+03</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year9</td>
+<td class="gt_row gt_right" headers="estimate">7.900360e+02</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year10</td>
+<td class="gt_row gt_right" headers="estimate">1.002326e+03</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year11</td>
+<td class="gt_row gt_right" headers="estimate">1.724188e+03</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year12</td>
+<td class="gt_row gt_right" headers="estimate">2.123407e+03</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">alpha</td>
+<td class="gt_row gt_right" headers="estimate">1.046416e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">gamma</td>
+<td class="gt_row gt_right" headers="estimate">1.003978e-04</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">l[0]</td>
+<td class="gt_row gt_right" headers="estimate">3.030839e+03</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[0]</td>
+<td class="gt_row gt_right" headers="estimate">1.391889e+00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-1]</td>
+<td class="gt_row gt_right" headers="estimate">1.247135e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-2]</td>
+<td class="gt_row gt_right" headers="estimate">1.026212e+00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-3]</td>
+<td class="gt_row gt_right" headers="estimate">9.755682e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-4]</td>
+<td class="gt_row gt_right" headers="estimate">1.148884e+00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-5]</td>
+<td class="gt_row gt_right" headers="estimate">1.023189e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-6]</td>
+<td class="gt_row gt_right" headers="estimate">8.821853e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-7]</td>
+<td class="gt_row gt_right" headers="estimate">9.136359e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-8]</td>
+<td class="gt_row gt_right" headers="estimate">8.693099e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-9]</td>
+<td class="gt_row gt_right" headers="estimate">9.515551e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-10]</td>
+<td class="gt_row gt_right" headers="estimate">8.447967e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-11]</td>
+<td class="gt_row gt_right" headers="estimate">7.256405e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">sma1</td>
+<td class="gt_row gt_right" headers="estimate">-6.581359e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">constant</td>
+<td class="gt_row gt_right" headers="estimate">4.695784e+01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">(Intercept)</td>
+<td class="gt_row gt_right" headers="estimate">2.679654e+03</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">trend()</td>
+<td class="gt_row gt_right" headers="estimate">-1.041877e+01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year2</td>
+<td class="gt_row gt_right" headers="estimate">3.611331e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year3</td>
+<td class="gt_row gt_right" headers="estimate">7.919804e+02</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year4</td>
+<td class="gt_row gt_right" headers="estimate">1.048399e+03</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year5</td>
+<td class="gt_row gt_right" headers="estimate">1.619389e+03</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year6</td>
+<td class="gt_row gt_right" headers="estimate">1.691237e+03</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year7</td>
+<td class="gt_row gt_right" headers="estimate">2.410013e+03</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year8</td>
+<td class="gt_row gt_right" headers="estimate">2.116217e+03</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year9</td>
+<td class="gt_row gt_right" headers="estimate">1.115707e+03</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year10</td>
+<td class="gt_row gt_right" headers="estimate">9.221975e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year11</td>
+<td class="gt_row gt_right" headers="estimate">1.373616e+03</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year12</td>
+<td class="gt_row gt_right" headers="estimate">1.583178e+03</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">alpha</td>
+<td class="gt_row gt_right" headers="estimate">2.425685e-02</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">beta</td>
+<td class="gt_row gt_right" headers="estimate">1.065897e-03</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">gamma</td>
+<td class="gt_row gt_right" headers="estimate">1.128372e-04</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">l[0]</td>
+<td class="gt_row gt_right" headers="estimate">4.049403e+03</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">b[0]</td>
+<td class="gt_row gt_right" headers="estimate">-1.210168e+01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[0]</td>
+<td class="gt_row gt_right" headers="estimate">1.136913e+00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-1]</td>
+<td class="gt_row gt_right" headers="estimate">1.037251e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-2]</td>
+<td class="gt_row gt_right" headers="estimate">8.856814e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-3]</td>
+<td class="gt_row gt_right" headers="estimate">9.521513e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-4]</td>
+<td class="gt_row gt_right" headers="estimate">1.276195e+00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-5]</td>
+<td class="gt_row gt_right" headers="estimate">1.369725e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-6]</td>
+<td class="gt_row gt_right" headers="estimate">1.144289e+00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-7]</td>
+<td class="gt_row gt_right" headers="estimate">1.112144e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-8]</td>
+<td class="gt_row gt_right" headers="estimate">9.334563e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-9]</td>
+<td class="gt_row gt_right" headers="estimate">8.625533e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-10]</td>
+<td class="gt_row gt_right" headers="estimate">7.041093e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-11]</td>
+<td class="gt_row gt_right" headers="estimate">5.855304e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">sar1</td>
+<td class="gt_row gt_right" headers="estimate">2.985697e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">sar2</td>
+<td class="gt_row gt_right" headers="estimate">8.510241e-02</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">sma1</td>
+<td class="gt_row gt_right" headers="estimate">-8.343419e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">constant</td>
+<td class="gt_row gt_right" headers="estimate">-7.631148e+01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">(Intercept)</td>
+<td class="gt_row gt_right" headers="estimate">1.550157e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">trend()</td>
+<td class="gt_row gt_right" headers="estimate">8.379548e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year2</td>
+<td class="gt_row gt_right" headers="estimate">2.690490e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year3</td>
+<td class="gt_row gt_right" headers="estimate">4.909552e+02</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year4</td>
+<td class="gt_row gt_right" headers="estimate">5.952899e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year5</td>
+<td class="gt_row gt_right" headers="estimate">8.111247e+02</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year6</td>
+<td class="gt_row gt_right" headers="estimate">8.423165e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year7</td>
+<td class="gt_row gt_right" headers="estimate">1.255366e+03</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year8</td>
+<td class="gt_row gt_right" headers="estimate">1.213629e+03</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year9</td>
+<td class="gt_row gt_right" headers="estimate">7.748208e+02</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year10</td>
+<td class="gt_row gt_right" headers="estimate">6.275841e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year11</td>
+<td class="gt_row gt_right" headers="estimate">7.729902e+02</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year12</td>
+<td class="gt_row gt_right" headers="estimate">8.892535e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">alpha</td>
+<td class="gt_row gt_right" headers="estimate">1.151725e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">beta</td>
+<td class="gt_row gt_right" headers="estimate">2.080879e-04</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">gamma</td>
+<td class="gt_row gt_right" headers="estimate">1.015728e-04</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">l[0]</td>
+<td class="gt_row gt_right" headers="estimate">9.307426e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">b[0]</td>
+<td class="gt_row gt_right" headers="estimate">7.243255e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[0]</td>
+<td class="gt_row gt_right" headers="estimate">1.099435e+00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-1]</td>
+<td class="gt_row gt_right" headers="estimate">1.030543e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-2]</td>
+<td class="gt_row gt_right" headers="estimate">9.503719e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-3]</td>
+<td class="gt_row gt_right" headers="estimate">1.028809e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-4]</td>
+<td class="gt_row gt_right" headers="estimate">1.351961e+00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-5]</td>
+<td class="gt_row gt_right" headers="estimate">1.339093e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-6]</td>
+<td class="gt_row gt_right" headers="estimate">1.091867e+00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-7]</td>
+<td class="gt_row gt_right" headers="estimate">1.075853e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-8]</td>
+<td class="gt_row gt_right" headers="estimate">9.254713e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-9]</td>
+<td class="gt_row gt_right" headers="estimate">8.518950e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-10]</td>
+<td class="gt_row gt_right" headers="estimate">7.232514e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-11]</td>
+<td class="gt_row gt_right" headers="estimate">5.314488e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">ar1</td>
+<td class="gt_row gt_right" headers="estimate">9.335144e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">ma1</td>
+<td class="gt_row gt_right" headers="estimate">-8.338887e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">sma1</td>
+<td class="gt_row gt_right" headers="estimate">-6.390377e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">constant</td>
+<td class="gt_row gt_right" headers="estimate">6.349806e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">(Intercept)</td>
+<td class="gt_row gt_right" headers="estimate">1.125977e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">trend()</td>
+<td class="gt_row gt_right" headers="estimate">-5.536783e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year2</td>
+<td class="gt_row gt_right" headers="estimate">1.133939e+01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year3</td>
+<td class="gt_row gt_right" headers="estimate">1.960736e+01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year4</td>
+<td class="gt_row gt_right" headers="estimate">1.101818e+01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year5</td>
+<td class="gt_row gt_right" headers="estimate">1.742900e+01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year6</td>
+<td class="gt_row gt_right" headers="estimate">2.333982e+01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year7</td>
+<td class="gt_row gt_right" headers="estimate">3.446493e+01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year8</td>
+<td class="gt_row gt_right" headers="estimate">3.516146e+01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year9</td>
+<td class="gt_row gt_right" headers="estimate">3.228657e+01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year10</td>
+<td class="gt_row gt_right" headers="estimate">3.112596e+01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year11</td>
+<td class="gt_row gt_right" headers="estimate">4.646535e+01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year12</td>
+<td class="gt_row gt_right" headers="estimate">8.651903e+01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">alpha</td>
+<td class="gt_row gt_right" headers="estimate">1.312617e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">beta</td>
+<td class="gt_row gt_right" headers="estimate">1.406875e-04</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">gamma</td>
+<td class="gt_row gt_right" headers="estimate">1.781227e-03</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">l[0]</td>
+<td class="gt_row gt_right" headers="estimate">1.502374e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">b[0]</td>
+<td class="gt_row gt_right" headers="estimate">-5.555894e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[0]</td>
+<td class="gt_row gt_right" headers="estimate">1.619832e+00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-1]</td>
+<td class="gt_row gt_right" headers="estimate">1.209908e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-2]</td>
+<td class="gt_row gt_right" headers="estimate">1.036982e+00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-3]</td>
+<td class="gt_row gt_right" headers="estimate">1.001666e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-4]</td>
+<td class="gt_row gt_right" headers="estimate">1.042791e+00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-5]</td>
+<td class="gt_row gt_right" headers="estimate">1.050046e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-6]</td>
+<td class="gt_row gt_right" headers="estimate">9.110078e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-7]</td>
+<td class="gt_row gt_right" headers="estimate">8.751270e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-8]</td>
+<td class="gt_row gt_right" headers="estimate">8.518045e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-9]</td>
+<td class="gt_row gt_right" headers="estimate">9.114332e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-10]</td>
+<td class="gt_row gt_right" headers="estimate">8.196058e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-11]</td>
+<td class="gt_row gt_right" headers="estimate">6.697971e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">ar1</td>
+<td class="gt_row gt_right" headers="estimate">2.436489e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">ar2</td>
+<td class="gt_row gt_right" headers="estimate">-1.057373e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">ar3</td>
+<td class="gt_row gt_right" headers="estimate">1.438100e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">sar1</td>
+<td class="gt_row gt_right" headers="estimate">-6.175780e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">sar2</td>
+<td class="gt_row gt_right" headers="estimate">-2.220799e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">constant</td>
+<td class="gt_row gt_right" headers="estimate">-9.981627e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">(Intercept)</td>
+<td class="gt_row gt_right" headers="estimate">1.187423e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">trend()</td>
+<td class="gt_row gt_right" headers="estimate">1.120803e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year2</td>
+<td class="gt_row gt_right" headers="estimate">-8.763660e+00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year3</td>
+<td class="gt_row gt_right" headers="estimate">-2.241606e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year4</td>
+<td class="gt_row gt_right" headers="estimate">4.923306e+00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year5</td>
+<td class="gt_row gt_right" headers="estimate">-6.411783e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year6</td>
+<td class="gt_row gt_right" headers="estimate">-1.996116e+01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year7</td>
+<td class="gt_row gt_right" headers="estimate">4.913233e+01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year8</td>
+<td class="gt_row gt_right" headers="estimate">4.936867e+01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year9</td>
+<td class="gt_row gt_right" headers="estimate">4.374786e+01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year10</td>
+<td class="gt_row gt_right" headers="estimate">4.026992e+01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year11</td>
+<td class="gt_row gt_right" headers="estimate">9.750626e+01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year12</td>
+<td class="gt_row gt_right" headers="estimate">1.589569e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">alpha</td>
+<td class="gt_row gt_right" headers="estimate">5.308921e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">beta</td>
+<td class="gt_row gt_right" headers="estimate">1.805540e-04</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">gamma</td>
+<td class="gt_row gt_right" headers="estimate">1.317933e-04</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">l[0]</td>
+<td class="gt_row gt_right" headers="estimate">1.121389e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">b[0]</td>
+<td class="gt_row gt_right" headers="estimate">6.625593e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[0]</td>
+<td class="gt_row gt_right" headers="estimate">1.455572e+00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-1]</td>
+<td class="gt_row gt_right" headers="estimate">1.239508e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-2]</td>
+<td class="gt_row gt_right" headers="estimate">1.018031e+00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-3]</td>
+<td class="gt_row gt_right" headers="estimate">1.036081e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-4]</td>
+<td class="gt_row gt_right" headers="estimate">1.120658e+00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-5]</td>
+<td class="gt_row gt_right" headers="estimate">1.078534e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-6]</td>
+<td class="gt_row gt_right" headers="estimate">7.740938e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-7]</td>
+<td class="gt_row gt_right" headers="estimate">8.167812e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-8]</td>
+<td class="gt_row gt_right" headers="estimate">8.806291e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-9]</td>
+<td class="gt_row gt_right" headers="estimate">8.791414e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-10]</td>
+<td class="gt_row gt_right" headers="estimate">8.320005e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-11]</td>
+<td class="gt_row gt_right" headers="estimate">8.689697e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">ar1</td>
+<td class="gt_row gt_right" headers="estimate">5.147340e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">ar2</td>
+<td class="gt_row gt_right" headers="estimate">3.840141e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">sma1</td>
+<td class="gt_row gt_right" headers="estimate">-5.791435e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">(Intercept)</td>
+<td class="gt_row gt_right" headers="estimate">1.448543e+03</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">trend()</td>
+<td class="gt_row gt_right" headers="estimate">2.471429e+00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year2</td>
+<td class="gt_row gt_right" headers="estimate">-7.932857e+01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year3</td>
+<td class="gt_row gt_right" headers="estimate">2.249143e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year4</td>
+<td class="gt_row gt_right" headers="estimate">1.189429e+02</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year5</td>
+<td class="gt_row gt_right" headers="estimate">-6.174286e+01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year6</td>
+<td class="gt_row gt_right" headers="estimate">-2.139286e+02</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year7</td>
+<td class="gt_row gt_right" headers="estimate">2.993857e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year8</td>
+<td class="gt_row gt_right" headers="estimate">6.019143e+02</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year9</td>
+<td class="gt_row gt_right" headers="estimate">4.492286e+02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year10</td>
+<td class="gt_row gt_right" headers="estimate">1.331686e+03</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year11</td>
+<td class="gt_row gt_right" headers="estimate">2.457786e+03</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_left" headers="term">season()year12</td>
+<td class="gt_row gt_right" headers="estimate">4.128886e+03</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">alpha</td>
+<td class="gt_row gt_right" headers="estimate">6.865049e-02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">gamma</td>
+<td class="gt_row gt_right" headers="estimate">1.000729e-04</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">l[0]</td>
+<td class="gt_row gt_right" headers="estimate">2.333769e+03</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[0]</td>
+<td class="gt_row gt_right" headers="estimate">2.330989e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-1]</td>
+<td class="gt_row gt_right" headers="estimate">1.681006e+00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-2]</td>
+<td class="gt_row gt_right" headers="estimate">1.239721e+00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-3]</td>
+<td class="gt_row gt_right" headers="estimate">8.738231e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-4]</td>
+<td class="gt_row gt_right" headers="estimate">9.687017e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-5]</td>
+<td class="gt_row gt_right" headers="estimate">8.008275e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-6]</td>
+<td class="gt_row gt_right" headers="estimate">5.888510e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-7]</td>
+<td class="gt_row gt_right" headers="estimate">6.544557e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-8]</td>
+<td class="gt_row gt_right" headers="estimate">7.437916e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-9]</td>
+<td class="gt_row gt_right" headers="estimate">7.798798e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-10]</td>
+<td class="gt_row gt_right" headers="estimate">6.522038e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_left" headers="term">s[-11]</td>
+<td class="gt_row gt_right" headers="estimate">6.857497e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">ma1</td>
+<td class="gt_row gt_right" headers="estimate">1.743036e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">sma1</td>
+<td class="gt_row gt_right" headers="estimate">-4.746335e-01</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">sma2</td>
+<td class="gt_row gt_right" headers="estimate">-1.499220e-01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_left" headers="term">constant</td>
+<td class="gt_row gt_right" headers="estimate">2.563495e+01</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="training-accuracy" class="level1">
+<h1>Training accuracy</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fit <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">accuracy</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Varietal, .model, Varietal, RMSE, MAE, MAPE) <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(.model, Varietal) <span class="sc">|&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span> <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">2</span>)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="csqwuaqwux" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#csqwuaqwux table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#csqwuaqwux thead, #csqwuaqwux tbody, #csqwuaqwux tfoot, #csqwuaqwux tr, #csqwuaqwux td, #csqwuaqwux th {
+  border-style: none;
+}
+
+#csqwuaqwux p {
+  margin: 0;
+  padding: 0;
+}
+
+#csqwuaqwux .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#csqwuaqwux .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#csqwuaqwux .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#csqwuaqwux .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#csqwuaqwux .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#csqwuaqwux .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#csqwuaqwux .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#csqwuaqwux .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#csqwuaqwux .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#csqwuaqwux .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#csqwuaqwux .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#csqwuaqwux .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#csqwuaqwux .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#csqwuaqwux .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#csqwuaqwux .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#csqwuaqwux .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#csqwuaqwux .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#csqwuaqwux .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#csqwuaqwux .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#csqwuaqwux .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#csqwuaqwux .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#csqwuaqwux .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#csqwuaqwux .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#csqwuaqwux .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#csqwuaqwux .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#csqwuaqwux .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#csqwuaqwux .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#csqwuaqwux .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#csqwuaqwux .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#csqwuaqwux .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#csqwuaqwux .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#csqwuaqwux .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#csqwuaqwux .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#csqwuaqwux .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#csqwuaqwux .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#csqwuaqwux .gt_left {
+  text-align: left;
+}
+
+#csqwuaqwux .gt_center {
+  text-align: center;
+}
+
+#csqwuaqwux .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#csqwuaqwux .gt_font_normal {
+  font-weight: normal;
+}
+
+#csqwuaqwux .gt_font_bold {
+  font-weight: bold;
+}
+
+#csqwuaqwux .gt_font_italic {
+  font-style: italic;
+}
+
+#csqwuaqwux .gt_super {
+  font-size: 65%;
+}
+
+#csqwuaqwux .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#csqwuaqwux .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#csqwuaqwux .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#csqwuaqwux .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#csqwuaqwux .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#csqwuaqwux .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#csqwuaqwux .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#csqwuaqwux .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#csqwuaqwux div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="Varietal" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Varietal</th>
+<th id="a.model" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">.model</th>
+<th id="RMSE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">RMSE</th>
+<th id="MAE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MAE</th>
+<th id="MAPE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MAPE</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="Varietal">Dry white</td>
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_right" headers="RMSE">326.12</td>
+<td class="gt_row gt_right" headers="MAE">230.17</td>
+<td class="gt_row gt_right" headers="MAPE">7.33</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Varietal">Fortified</td>
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_right" headers="RMSE">283.03</td>
+<td class="gt_row gt_right" headers="MAE">209.55</td>
+<td class="gt_row gt_right" headers="MAPE">6.84</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Varietal">Red</td>
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_right" headers="RMSE">194.55</td>
+<td class="gt_row gt_right" headers="MAE">139.48</td>
+<td class="gt_row gt_right" headers="MAPE">8.95</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Varietal">Rose</td>
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_right" headers="RMSE">19.39</td>
+<td class="gt_row gt_right" headers="MAE">13.07</td>
+<td class="gt_row gt_right" headers="MAPE">13.98</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Varietal">Sweet white</td>
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_right" headers="RMSE">50.59</td>
+<td class="gt_row gt_right" headers="MAE">35.58</td>
+<td class="gt_row gt_right" headers="MAPE">13.85</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Varietal">sparkling</td>
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_right" headers="RMSE">355.07</td>
+<td class="gt_row gt_right" headers="MAE">247.00</td>
+<td class="gt_row gt_right" headers="MAPE">11.06</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Varietal">Dry white</td>
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_right" headers="RMSE">318.36</td>
+<td class="gt_row gt_right" headers="MAE">243.41</td>
+<td class="gt_row gt_right" headers="MAPE">7.64</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Varietal">Fortified</td>
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_right" headers="RMSE">285.23</td>
+<td class="gt_row gt_right" headers="MAE">222.32</td>
+<td class="gt_row gt_right" headers="MAPE">7.10</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Varietal">Red</td>
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_right" headers="RMSE">177.65</td>
+<td class="gt_row gt_right" headers="MAE">132.50</td>
+<td class="gt_row gt_right" headers="MAPE">8.33</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Varietal">Rose</td>
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_right" headers="RMSE">17.13</td>
+<td class="gt_row gt_right" headers="MAE">12.04</td>
+<td class="gt_row gt_right" headers="MAPE">12.25</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Varietal">Sweet white</td>
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_right" headers="RMSE">44.57</td>
+<td class="gt_row gt_right" headers="MAE">31.26</td>
+<td class="gt_row gt_right" headers="MAPE">12.97</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Varietal">sparkling</td>
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_right" headers="RMSE">349.91</td>
+<td class="gt_row gt_right" headers="MAE">254.85</td>
+<td class="gt_row gt_right" headers="MAPE">11.01</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Varietal">Dry white</td>
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_right" headers="RMSE">315.52</td>
+<td class="gt_row gt_right" headers="MAE">243.12</td>
+<td class="gt_row gt_right" headers="MAPE">7.74</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Varietal">Fortified</td>
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_right" headers="RMSE">286.21</td>
+<td class="gt_row gt_right" headers="MAE">222.37</td>
+<td class="gt_row gt_right" headers="MAPE">7.21</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Varietal">Red</td>
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_right" headers="RMSE">197.68</td>
+<td class="gt_row gt_right" headers="MAE">152.57</td>
+<td class="gt_row gt_right" headers="MAPE">10.94</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Varietal">Rose</td>
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_right" headers="RMSE">18.46</td>
+<td class="gt_row gt_right" headers="MAE">13.11</td>
+<td class="gt_row gt_right" headers="MAPE">13.95</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Varietal">Sweet white</td>
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_right" headers="RMSE">100.88</td>
+<td class="gt_row gt_right" headers="MAE">81.03</td>
+<td class="gt_row gt_right" headers="MAPE">35.50</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Varietal">sparkling</td>
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_right" headers="RMSE">367.66</td>
+<td class="gt_row gt_right" headers="MAE">267.89</td>
+<td class="gt_row gt_right" headers="MAPE">11.38</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="forecasting-accuracy" class="level1">
+<h1>Forecasting accuracy</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fc <span class="ot">&lt;-</span> fit <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">forecast</span>(test)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>fc <span class="sc">|&gt;</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">accuracy</span>(test) <span class="sc">|&gt;</span> </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Varietal, .model, Varietal, RMSE, MAE, MAPE) <span class="sc">|&gt;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(.model, Varietal) <span class="sc">|&gt;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span> <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="eufjqmnjdp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#eufjqmnjdp table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#eufjqmnjdp thead, #eufjqmnjdp tbody, #eufjqmnjdp tfoot, #eufjqmnjdp tr, #eufjqmnjdp td, #eufjqmnjdp th {
+  border-style: none;
+}
+
+#eufjqmnjdp p {
+  margin: 0;
+  padding: 0;
+}
+
+#eufjqmnjdp .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#eufjqmnjdp .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#eufjqmnjdp .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#eufjqmnjdp .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#eufjqmnjdp .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#eufjqmnjdp .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#eufjqmnjdp .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#eufjqmnjdp .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#eufjqmnjdp .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#eufjqmnjdp .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#eufjqmnjdp .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#eufjqmnjdp .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#eufjqmnjdp .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#eufjqmnjdp .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#eufjqmnjdp .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#eufjqmnjdp .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#eufjqmnjdp .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#eufjqmnjdp .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#eufjqmnjdp .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eufjqmnjdp .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#eufjqmnjdp .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#eufjqmnjdp .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#eufjqmnjdp .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eufjqmnjdp .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#eufjqmnjdp .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#eufjqmnjdp .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#eufjqmnjdp .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eufjqmnjdp .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#eufjqmnjdp .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#eufjqmnjdp .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#eufjqmnjdp .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#eufjqmnjdp .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#eufjqmnjdp .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eufjqmnjdp .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#eufjqmnjdp .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eufjqmnjdp .gt_left {
+  text-align: left;
+}
+
+#eufjqmnjdp .gt_center {
+  text-align: center;
+}
+
+#eufjqmnjdp .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#eufjqmnjdp .gt_font_normal {
+  font-weight: normal;
+}
+
+#eufjqmnjdp .gt_font_bold {
+  font-weight: bold;
+}
+
+#eufjqmnjdp .gt_font_italic {
+  font-style: italic;
+}
+
+#eufjqmnjdp .gt_super {
+  font-size: 65%;
+}
+
+#eufjqmnjdp .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#eufjqmnjdp .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#eufjqmnjdp .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#eufjqmnjdp .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#eufjqmnjdp .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#eufjqmnjdp .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#eufjqmnjdp .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#eufjqmnjdp .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#eufjqmnjdp div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="Varietal" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Varietal</th>
+<th id="a.model" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">.model</th>
+<th id="RMSE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">RMSE</th>
+<th id="MAE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MAE</th>
+<th id="MAPE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MAPE</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="Varietal">Dry white</td>
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_right" headers="RMSE">484.39</td>
+<td class="gt_row gt_right" headers="MAE">420.06</td>
+<td class="gt_row gt_right" headers="MAPE">10.26</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Varietal">Fortified</td>
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_right" headers="RMSE">328.50</td>
+<td class="gt_row gt_right" headers="MAE">266.46</td>
+<td class="gt_row gt_right" headers="MAPE">11.65</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Varietal">Red</td>
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_right" headers="RMSE">257.86</td>
+<td class="gt_row gt_right" headers="MAE">202.54</td>
+<td class="gt_row gt_right" headers="MAPE">8.63</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Varietal">Rose</td>
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_right" headers="RMSE">9.21</td>
+<td class="gt_row gt_right" headers="MAE">8.12</td>
+<td class="gt_row gt_right" headers="MAPE">16.80</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Varietal">Sweet white</td>
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_right" headers="RMSE">51.27</td>
+<td class="gt_row gt_right" headers="MAE">45.49</td>
+<td class="gt_row gt_right" headers="MAPE">21.12</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Varietal">sparkling</td>
+<td class="gt_row gt_left" headers=".model">ARIMA</td>
+<td class="gt_row gt_right" headers="RMSE">461.46</td>
+<td class="gt_row gt_right" headers="MAE">363.62</td>
+<td class="gt_row gt_right" headers="MAPE">18.19</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Varietal">Dry white</td>
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_right" headers="RMSE">562.69</td>
+<td class="gt_row gt_right" headers="MAE">510.79</td>
+<td class="gt_row gt_right" headers="MAPE">12.71</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Varietal">Fortified</td>
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_right" headers="RMSE">318.90</td>
+<td class="gt_row gt_right" headers="MAE">242.65</td>
+<td class="gt_row gt_right" headers="MAPE">10.24</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Varietal">Red</td>
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_right" headers="RMSE">297.16</td>
+<td class="gt_row gt_right" headers="MAE">255.37</td>
+<td class="gt_row gt_right" headers="MAPE">10.43</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Varietal">Rose</td>
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_right" headers="RMSE">8.38</td>
+<td class="gt_row gt_right" headers="MAE">6.10</td>
+<td class="gt_row gt_right" headers="MAPE">11.07</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Varietal">Sweet white</td>
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_right" headers="RMSE">61.11</td>
+<td class="gt_row gt_right" headers="MAE">53.32</td>
+<td class="gt_row gt_right" headers="MAPE">24.69</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Varietal">sparkling</td>
+<td class="gt_row gt_left" headers=".model">ETS</td>
+<td class="gt_row gt_right" headers="RMSE">444.48</td>
+<td class="gt_row gt_right" headers="MAE">338.62</td>
+<td class="gt_row gt_right" headers="MAPE">17.58</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Varietal">Dry white</td>
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_right" headers="RMSE">556.28</td>
+<td class="gt_row gt_right" headers="MAE">497.74</td>
+<td class="gt_row gt_right" headers="MAPE">12.37</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Varietal">Fortified</td>
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_right" headers="RMSE">426.53</td>
+<td class="gt_row gt_right" headers="MAE">362.69</td>
+<td class="gt_row gt_right" headers="MAPE">16.25</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Varietal">Red</td>
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_right" headers="RMSE">319.28</td>
+<td class="gt_row gt_right" headers="MAE">249.00</td>
+<td class="gt_row gt_right" headers="MAPE">11.79</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Varietal">Rose</td>
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_right" headers="RMSE">9.19</td>
+<td class="gt_row gt_right" headers="MAE">7.59</td>
+<td class="gt_row gt_right" headers="MAPE">16.42</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Varietal">Sweet white</td>
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_right" headers="RMSE">112.76</td>
+<td class="gt_row gt_right" headers="MAE">104.20</td>
+<td class="gt_row gt_right" headers="MAPE">47.74</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Varietal">sparkling</td>
+<td class="gt_row gt_left" headers=".model">TSLM(Sales ~ trend() + season())</td>
+<td class="gt_row gt_right" headers="RMSE">459.05</td>
+<td class="gt_row gt_right" headers="MAE">353.39</td>
+<td class="gt_row gt_right" headers="MAPE">19.10</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="forecast-visualization" class="level1">
+<h1>Forecast visualization</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fc <span class="sc">|&gt;</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">autoplot</span>(train <span class="sc">|&gt;</span> <span class="fu">filter</span>(Month <span class="sc">&gt;=</span> <span class="fu">yearmonth</span>(<span class="st">"1993 Jan"</span>))) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> Varietal, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Australian Wine Sales Forecasts by Varietal"</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Sales"</span>, <span class="at">x =</span> <span class="st">"Month"</span>) <span class="sc">+</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="aus-wine-sales-variety_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="report-generation" class="level1">
+<h1>Report generation</h1>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
