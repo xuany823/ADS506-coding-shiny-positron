@@ -188,14 +188,23 @@ server <- function(input, output, session) {
   })
   
   # Reactive fitted models
-  fit_models <- reactive({
+fit_models <- reactive({
+  tryCatch({
     data_trn() |>
       model(
         TSLM = TSLM(Sales ~ trend() + season()),
         ETS = ETS(Sales),
         ARIMA = ARIMA(Sales)
       )
+  }, error = function(e) {
+    showNotification(
+      paste("Error fitting models:", e$message),
+      type = "error",
+      duration = 10
+    )
+    NULL
   })
+})
   
   # Reactive forecasts
   fc_all <- reactive({
@@ -301,7 +310,8 @@ server <- function(input, output, session) {
   
   # Tab 3: Forecast accuracy
   output$forecast_accuracy_dt <- renderDT({
-    req(input$model_type_acc)
+    req(length(input$model_type_acc) > 0)
+    
     fc_acc <- fc_all() |>
       filter(.model %in% input$model_type_acc) |>
       accuracy(aus_wine_ts) |>
@@ -315,21 +325,26 @@ server <- function(input, output, session) {
   
   # Tab 3: Forecast plot
   output$forecast_plot <- renderPlot({
-    req(input$model_type_viz)
+    req(length(input$model_type_viz) > 0)
+    
     trn_start <- train_cutoff_reactive() - 24
     
     fc_filtered <- fc_all() |>
       filter(.model %in% input$model_type_viz)
     
+    # Check if there are forecasts to plot
+    req(nrow(fc_filtered) > 0)
+    
     fc_filtered |>
-      autoplot(aus_wine_ts |> filter(Month >= trn_start)) +
+      autoplot(aus_wine_ts |> filter(Month >= trn_start), level = c(80, 95)) +
       facet_wrap(~ Varietal, scales = "free_y", ncol = 1) +
       labs(
         title = paste("Forecasts -", paste(input$model_type_viz, collapse = ", ")),
         y = "Sales",
         x = "Month"
       ) +
-      theme_minimal()
+      theme_minimal() +
+      theme(legend.position = "bottom")
   })
 }
 
