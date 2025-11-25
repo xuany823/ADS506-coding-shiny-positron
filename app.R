@@ -115,6 +115,12 @@ ui <- fluidPage(
           wellPanel(
             h3("Forecasting Accuracy"),
             checkboxInput("show_forecast_acc", "Show forecasting accuracy", value = TRUE),
+            checkboxGroupInput(
+              "model_type_acc",
+              "Select models for accuracy table:",
+              choices = c("TSLM", "ETS", "ARIMA"),
+              selected = c("TSLM", "ETS", "ARIMA")
+            ),
             hr(),
             conditionalPanel(
               condition = "input.show_forecast_acc",
@@ -128,9 +134,9 @@ ui <- fluidPage(
           6,
           wellPanel(
             h3("Forecast Visualization"),
-            selectInput(
+            checkboxGroupInput(
               "model_type_viz",
-              "Select model for visualization",
+              "Select models for visualization:",
               choices = c("TSLM", "ETS", "ARIMA"),
               selected = "ARIMA"
             ),
@@ -249,7 +255,7 @@ server <- function(input, output, session) {
         strip.background = element_rect(fill = "grey85", colour = NA),
         strip.text = element_text(size = 12),
         legend.position = "right",
-        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.x = element_text(hjust = 1),
         plot.margin = margin(t = 5, r = 20, b = 5, l = 5)
       ) +
       geom_vline(
@@ -294,7 +300,9 @@ server <- function(input, output, session) {
   
   # Tab 3: Forecast accuracy
   output$forecast_accuracy_dt <- renderDT({
+    req(input$model_type_acc)
     fc_acc <- fc_all() |>
+      filter(.model %in% input$model_type_acc) |>
       accuracy(aus_wine_ts) |>
       as_tibble() |>
       select(Varietal, .model, RMSE, MAE, MAPE) |>
@@ -306,16 +314,17 @@ server <- function(input, output, session) {
   
   # Tab 3: Forecast plot
   output$forecast_plot <- renderPlot({
+    req(input$model_type_viz)
     trn_start <- train_cutoff_reactive() - 24
     
     fc_filtered <- fc_all() |>
-      filter(.model == input$model_type_viz)
+      filter(.model %in% input$model_type_viz)
     
     fc_filtered |>
       autoplot(aus_wine_ts |> filter(Month >= trn_start)) +
       facet_wrap(~ Varietal, scales = "free_y", ncol = 1) +
       labs(
-        title = paste("Forecasts -", input$model_type_viz),
+        title = paste("Forecasts -", paste(input$model_type_viz, collapse = ", ")),
         y = "Sales",
         x = "Month"
       ) +
