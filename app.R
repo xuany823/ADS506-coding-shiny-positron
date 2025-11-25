@@ -139,6 +139,30 @@ ui <- fluidPage(
           )
         )
       )
+    ),
+
+    tabPanel(
+      "About",
+      fluidPage(
+        h2("About This App"),
+        p("The dataset was originally compiled by Rob J Hyndman and colleagues and is commonly used in time series forecasting examples. "),
+        p("For this assignment, the data are provided as 'AustralianWines.csv' in the course materials and loaded from the local 'data/' folder."),
+        p("This Shiny app was developed for ADS506 Assignment 5.1 to explore, model, and forecast monthly Australian wine sales."),
+        p("It includes three main components:"),
+        tags$ul(
+          tags$li("Visualization of time-series patterns across six major wine varietals"),
+          tags$li("Side-by-side comparison of TSLM, ETS, and ARIMA models"),
+          tags$li("Forecasting and evaluation of future wine sales")
+        ),
+        h3("Modeling Choices"),
+        p("The training period is controlled by the 'Training cutoff year' slider in the Visualization tab. All three models are re-estimated on the data up to the selected cutoff and then used to generate 12-month-ahead forecasts."),
+        p("Model performance is summarised using RMSE, MAE, and MAPE for both the training period and the 1-year forecast horizon. These metrics allow users to compare how well TSLM, ETS, and ARIMA perform for each varietal."),
+        h3("How to Use the App"),
+        p("1. Use the Visualization tab to filter varietals and date ranges."),
+        p("2. Use the Model Building tab to examine model forms and training accuracy."),
+        p("3. Use the Forecast tab to compare forecast accuracy and visualize predictions."),
+        p("4. by choosing different training cutoff,")
+      )
     )
   )
 )
