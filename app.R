@@ -17,7 +17,7 @@ aus_wine <- read_csv(
 
 aus_wine_ts <- aus_wine |>
   pivot_longer(cols = -Month, names_to = "Varietal", values_to = "Sales") |>
-  as_tsibble(index = Month, key = Varietal)
+  tsibble::as_tsibble(index = Month, key = Varietal)
 
 # Date limits (as per QMD requirements)
 start_fixed <- as.Date("1980-01-01")
