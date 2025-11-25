@@ -122,8 +122,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Multiselct for varietals to display (default all display and selected with checkbox)</li>
 <li>Date range selector
 <ul>
-<li>First date selection fixed at January 1980</li>
-<li>Last date selection fixed at December 1994</li>
+<li>First date selection fixed at 1980-01-01</li>
+<li>Last date selection fixed at 1994-12-31</li>
 </ul></li>
 </ul>
 <div class="cell">
@@ -188,98 +188,62 @@ e.g.:
 <section id="data-splitting" class="level3">
 <h3 class="anchored" data-anchor-id="data-splitting">Data Splitting</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># training and test sets</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> aus_wine_ts <span class="sc">|&gt;</span> <span class="fu">filter_index</span>(<span class="st">"1980 Jan"</span> <span class="sc">~</span> <span class="st">"1993 Dec"</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> aus_wine_ts <span class="sc">|&gt;</span> <span class="fu">filter_index</span>(<span class="st">"1994 Jan"</span> <span class="sc">~</span> <span class="st">"1994 Dec"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create training cutoff date and split data</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>train_cutoff  <span class="ot">&lt;-</span> <span class="fu">yearmonth</span>(<span class="st">"1994 Jan"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>data_trn <span class="ot">&lt;-</span> aus_wine_ts <span class="sc">|&gt;</span> </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Month <span class="sc">&lt;</span> train_cutoff)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 </section>
 <section id="tab2---modeling-building" class="level2">
 <h2 class="anchored" data-anchor-id="tab2---modeling-building">Tab2 - Modeling Building</h2>
-<p>Imputs:</p>
+<p>Inputs:</p>
 <ul>
-<li>Toggle for model type: TSLM, ETS, ARIMA</li>
-<li>Toggle training accuracy</li>
+<li>Toggle for model specifications (default off)</li>
+<li>Toggle training accuracy (default off)</li>
 <li>Toggle forecasting accuracy</li>
 </ul>
 <section id="model-fitting" class="level3">
 <h3 class="anchored" data-anchor-id="model-fitting">Model fitting</h3>
 <p>Built multiple models for each varietal using TSLM, auto ETS and auto ARIMA.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> train <span class="sc">|&gt;</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">model</span>(<span class="fu">TSLM</span>(Sales <span class="sc">~</span> <span class="fu">trend</span>() <span class="sc">+</span> <span class="fu">season</span>()),</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> data_trn <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">model</span>(<span class="at">TSLM =</span> <span class="fu">TSLM</span>(Sales <span class="sc">~</span> <span class="fu">trend</span>() <span class="sc">+</span> <span class="fu">season</span>()),</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ETS =</span> <span class="fu">ETS</span>(Sales),</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">ARIMA =</span> <span class="fu">ARIMA</span>(Sales))</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>fit <span class="sc">|&gt;</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Model specifications by Varietal"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<caption>Model specifications by Varietal</caption>
-<colgroup>
-<col style="width: 12%">
-<col style="width: 35%">
-<col style="width: 13%">
-<col style="width: 37%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Varietal</th>
-<th style="text-align: left;">TSLM(Sales ~ trend() + season())</th>
-<th style="text-align: left;">ETS</th>
-<th style="text-align: left;">ARIMA</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Dry white</td>
-<td style="text-align: left;"><tslm></tslm></td>
-<td style="text-align: left;">&lt;ETS(M,N,M)&gt;</td>
-<td style="text-align: left;">&lt;ARIMA(0,0,0)(0,1,1)[12] w/ drift&gt;</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Fortified</td>
-<td style="text-align: left;"><tslm></tslm></td>
-<td style="text-align: left;">&lt;ETS(M,A,M)&gt;</td>
-<td style="text-align: left;">&lt;ARIMA(0,0,0)(2,1,1)[12] w/ drift&gt;</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Red</td>
-<td style="text-align: left;"><tslm></tslm></td>
-<td style="text-align: left;">&lt;ETS(M,A,M)&gt;</td>
-<td style="text-align: left;">&lt;ARIMA(1,0,1)(0,1,1)[12] w/ drift&gt;</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Rose</td>
-<td style="text-align: left;"><tslm></tslm></td>
-<td style="text-align: left;">&lt;ETS(M,A,M)&gt;</td>
-<td style="text-align: left;">&lt;ARIMA(3,0,0)(2,1,0)[12] w/ drift&gt;</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Sweet white</td>
-<td style="text-align: left;"><tslm></tslm></td>
-<td style="text-align: left;">&lt;ETS(M,A,M)&gt;</td>
-<td style="text-align: left;">&lt;ARIMA(2,0,0)(0,1,1)[12]&gt;</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">sparkling</td>
-<td style="text-align: left;"><tslm></tslm></td>
-<td style="text-align: left;">&lt;ETS(M,N,M)&gt;</td>
-<td style="text-align: left;">&lt;ARIMA(0,0,1)(0,1,2)[12] w/ drift&gt;</td>
-</tr>
-</tbody>
-</table>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="do">### Model specifications</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>fit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A mable: 6 x 4
+# Key:     Varietal [6]
+  Varietal       TSLM          ETS                              ARIMA
+  &lt;chr&gt;       &lt;model&gt;      &lt;model&gt;                            &lt;model&gt;
+1 Dry white    &lt;TSLM&gt; &lt;ETS(M,N,M)&gt; &lt;ARIMA(0,0,0)(0,1,1)[12] w/ drift&gt;
+2 Fortified    &lt;TSLM&gt; &lt;ETS(M,A,M)&gt; &lt;ARIMA(0,0,0)(2,1,1)[12] w/ drift&gt;
+3 Red          &lt;TSLM&gt; &lt;ETS(M,A,M)&gt; &lt;ARIMA(1,0,1)(0,1,1)[12] w/ drift&gt;
+4 Rose         &lt;TSLM&gt; &lt;ETS(M,A,M)&gt; &lt;ARIMA(3,0,0)(2,1,0)[12] w/ drift&gt;
+5 Sweet white  &lt;TSLM&gt; &lt;ETS(M,A,M)&gt;          &lt;ARIMA(2,0,0)(0,1,1)[12]&gt;
+6 sparkling    &lt;TSLM&gt; &lt;ETS(M,N,M)&gt; &lt;ARIMA(0,0,1)(0,1,2)[12] w/ drift&gt;</code></pre>
 </div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit_specs &lt;- fit |&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#    as_tibble() |&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#    select(Varietal, TSLM, ETS, ARIMA)</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># fit_specs |&gt;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   knitr::kable(caption = "Model specifications by Varietal")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The fitted models successfully report the required specifications: each varietal includes an ETS component form (e.g., ETS(M,A,M)) and a clearly identified ARIMA structure with full seasonal orders (e.g., ARIMA(0,0,0)(0,1,1)[12] w/ drift), which meets the MVP requirement for model specification.</p>
 </section>
 <section id="training-accuracy" class="level3">
 <h3 class="anchored" data-anchor-id="training-accuracy">Training accuracy</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit <span class="sc">|&gt;</span> </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">accuracy</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Varietal, .model, RMSE, MAE, MAPE) <span class="sc">|&gt;</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(RMSE) <span class="sc">|&gt;</span> </span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>, <span class="at">caption =</span> <span class="st">"Training accuracy sorted by RMSE"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fit <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">accuracy</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Varietal, .model, RMSE, MAE, MAPE) <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(RMSE) <span class="sc">|&gt;</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>, <span class="at">caption =</span> <span class="st">"Training accuracy sorted by RMSE"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <caption>Training accuracy sorted by RMSE</caption>
@@ -302,7 +266,7 @@ e.g.:
 </tr>
 <tr class="even">
 <td style="text-align: left;">Rose</td>
-<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: left;">TSLM</td>
 <td style="text-align: right;">18.5</td>
 <td style="text-align: right;">13.1</td>
 <td style="text-align: right;">14.0</td>
@@ -330,7 +294,7 @@ e.g.:
 </tr>
 <tr class="even">
 <td style="text-align: left;">Sweet white</td>
-<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: left;">TSLM</td>
 <td style="text-align: right;">100.9</td>
 <td style="text-align: right;">81.0</td>
 <td style="text-align: right;">35.5</td>
@@ -351,7 +315,7 @@ e.g.:
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Red</td>
-<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: left;">TSLM</td>
 <td style="text-align: right;">197.7</td>
 <td style="text-align: right;">152.6</td>
 <td style="text-align: right;">10.9</td>
@@ -372,14 +336,14 @@ e.g.:
 </tr>
 <tr class="even">
 <td style="text-align: left;">Fortified</td>
-<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: left;">TSLM</td>
 <td style="text-align: right;">286.2</td>
 <td style="text-align: right;">222.4</td>
 <td style="text-align: right;">7.2</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Dry white</td>
-<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: left;">TSLM</td>
 <td style="text-align: right;">315.5</td>
 <td style="text-align: right;">243.1</td>
 <td style="text-align: right;">7.7</td>
@@ -414,7 +378,7 @@ e.g.:
 </tr>
 <tr class="even">
 <td style="text-align: left;">sparkling</td>
-<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: left;">TSLM</td>
 <td style="text-align: right;">367.7</td>
 <td style="text-align: right;">267.9</td>
 <td style="text-align: right;">11.4</td>
@@ -427,13 +391,13 @@ e.g.:
 <section id="forecasting-accuracy" class="level3">
 <h3 class="anchored" data-anchor-id="forecasting-accuracy">Forecasting accuracy</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fc <span class="ot">&lt;-</span> fit <span class="sc">|&gt;</span> </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">forecast</span>(test)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>fc <span class="sc">|&gt;</span> </span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">accuracy</span>(test) <span class="sc">|&gt;</span> </span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Varietal, .model, RMSE, MAE, MAPE) <span class="sc">|&gt;</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(RMSE) <span class="sc">|&gt;</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>, <span class="at">caption =</span> <span class="st">"Validation accuracy sorted by RMSE"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fc <span class="ot">&lt;-</span> fit <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">forecast</span>(<span class="at">h =</span> <span class="st">"1 year"</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>fc <span class="sc">|&gt;</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">accuracy</span>(aus_wine_ts) <span class="sc">|&gt;</span> </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Varietal, .model, RMSE, MAE, MAPE) <span class="sc">|&gt;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(RMSE) <span class="sc">|&gt;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>, <span class="at">caption =</span> <span class="st">"Validation accuracy sorted by RMSE"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <caption>Validation accuracy sorted by RMSE</caption>
@@ -456,7 +420,7 @@ e.g.:
 </tr>
 <tr class="even">
 <td style="text-align: left;">Rose</td>
-<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: left;">TSLM</td>
 <td style="text-align: right;">9.2</td>
 <td style="text-align: right;">7.6</td>
 <td style="text-align: right;">16.4</td>
@@ -484,7 +448,7 @@ e.g.:
 </tr>
 <tr class="even">
 <td style="text-align: left;">Sweet white</td>
-<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: left;">TSLM</td>
 <td style="text-align: right;">112.8</td>
 <td style="text-align: right;">104.2</td>
 <td style="text-align: right;">47.7</td>
@@ -512,7 +476,7 @@ e.g.:
 </tr>
 <tr class="even">
 <td style="text-align: left;">Red</td>
-<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: left;">TSLM</td>
 <td style="text-align: right;">319.3</td>
 <td style="text-align: right;">249.0</td>
 <td style="text-align: right;">11.8</td>
@@ -526,7 +490,7 @@ e.g.:
 </tr>
 <tr class="even">
 <td style="text-align: left;">Fortified</td>
-<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: left;">TSLM</td>
 <td style="text-align: right;">426.5</td>
 <td style="text-align: right;">362.7</td>
 <td style="text-align: right;">16.3</td>
@@ -540,7 +504,7 @@ e.g.:
 </tr>
 <tr class="even">
 <td style="text-align: left;">sparkling</td>
-<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: left;">TSLM</td>
 <td style="text-align: right;">459.1</td>
 <td style="text-align: right;">353.4</td>
 <td style="text-align: right;">19.1</td>
@@ -561,7 +525,7 @@ e.g.:
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Dry white</td>
-<td style="text-align: left;">TSLM(Sales ~ trend() + season())</td>
+<td style="text-align: left;">TSLM</td>
 <td style="text-align: right;">556.3</td>
 <td style="text-align: right;">497.7</td>
 <td style="text-align: right;">12.4</td>
@@ -581,17 +545,18 @@ e.g.:
 </section>
 <section id="tab3---forecast" class="level2">
 <h2 class="anchored" data-anchor-id="tab3---forecast">Tab3 - Forecast</h2>
-<p>Inputs:<br>
-* User can select model type for forecast visualization and forecast table (TSLM, ETS, ARIMA)</p>
+<p>Inputs: * Toggle User can select model type for forecast visualization * Toggle User can select model for forecast table (ARIMA)</p>
 <section id="forecast-visualization" class="level3">
 <h3 class="anchored" data-anchor-id="forecast-visualization">Forecast visualization</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fc <span class="sc">|&gt;</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">autoplot</span>(train <span class="sc">|&gt;</span> <span class="fu">filter</span>(Month <span class="sc">&gt;=</span> <span class="fu">yearmonth</span>(<span class="st">"1993 Jan"</span>))) <span class="sc">+</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> Varietal, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol=</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Australian Wine Sales Forecasts by Varietal"</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Sales"</span>, <span class="at">x =</span> <span class="st">"Month"</span>) <span class="sc">+</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>trn_start <span class="ot">&lt;-</span> train_cutoff <span class="sc">-</span> <span class="dv">24</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>fc <span class="sc">|&gt;</span> </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">autoplot</span>(aus_wine_ts <span class="sc">|&gt;</span> <span class="fu">filter</span>(Month <span class="sc">&gt;=</span> trn_start)) <span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> Varietal, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Australian Wine Sales Forecasts by Varietal"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Sales"</span>, <span class="at">x =</span> <span class="st">"Month"</span>) <span class="sc">+</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -604,12 +569,12 @@ e.g.:
 <section id="forecast-table" class="level3">
 <h3 class="anchored" data-anchor-id="forecast-table">Forecast table</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fc <span class="sc">|&gt;</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(.model <span class="sc">==</span> <span class="st">'ARIMA'</span>, <span class="fu">year</span>(Month) <span class="sc">==</span> <span class="dv">1994</span>) <span class="sc">|&gt;</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span>                         </span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Varietal, .model, Month, .mean) <span class="sc">|&gt;</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> Month, <span class="at">values_from =</span> .mean) <span class="sc">|&gt;</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">0</span>, <span class="at">caption =</span> <span class="st">"Forecasted Sales for 1994 by Varietal using ARIMA Model"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fc <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(.model <span class="sc">==</span> <span class="st">'ARIMA'</span>, <span class="fu">year</span>(Month) <span class="sc">==</span> <span class="dv">1994</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span>                         </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Varietal, .model, Month, .mean) <span class="sc">|&gt;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> Month, <span class="at">values_from =</span> .mean) <span class="sc">|&gt;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">0</span>, <span class="at">caption =</span> <span class="st">"Forecasted Sales for 1994 by Varietal using ARIMA Model"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <caption>Forecasted Sales for 1994 by Varietal using ARIMA Model</caption>

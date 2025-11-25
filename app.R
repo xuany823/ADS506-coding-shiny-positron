@@ -1,74 +1,137 @@
 library(shiny)
-library(bslib)
 library(fpp3)
 library(readr)
-library(dplyr)
-library(tidyr)
-library(lubridate)
-library(DT)
+library(tidyverse)
 library(here)
+library(DT)
 
+# Data load & prep
+aus_wine <- read_csv(
+  here("data", "AustralianWines.csv"),
+  col_types = cols(Rose = col_number()),
+  show_col_types = FALSE
+) |>
+  fill(Rose, .direction = "down") |>
+  mutate(Month = mdy(str_replace(Month, "-", "-01-")) |> yearmonth())
+
+aus_wine_ts <- aus_wine |>
+  pivot_longer(cols = -Month, names_to = "Varietal", values_to = "Sales") |>
+  as_tsibble(index = Month, key = Varietal)
+
+# Date limits (as per QMD requirements)
+start_fixed <- as.Date("1980-01-01")
+max_allowed <- as.Date("1994-12-31")
+min_date <- start_fixed
+max_date <- as.Date(max(as.Date(aus_wine_ts$Month)))
+end_date <- min(max_date, max_allowed)
+varietals_all <- sort(unique(aus_wine_ts$Varietal))
+
+# Pre-fit models once at startup
+train_cutoff <- yearmonth("1994 Jan")
+data_trn <- aus_wine_ts |> filter(Month < train_cutoff)
+fit_models <- data_trn |>
+  model(
+    TSLM = TSLM(Sales ~ trend() + season()),
+    ETS = ETS(Sales),
+    ARIMA = ARIMA(Sales)
+  )
+fc_all <- fit_models |> forecast(h = "1 year")
+
+# UI
 ui <- fluidPage(
-  theme = bs_theme(bootswatch = "flatly"),
-  titlePanel("Australian Wine — Visualization, Modeling, Forecasts"),
-  sidebarLayout(
-    sidebarPanel(
-      width = 3,
-      p("Controls appear per tab. Use the varietal selector and date range on Visualization.")
+  titlePanel("ADS 506 - Week 5: Australian Wine Sales Analysis"),
+  tabsetPanel(
+    # Tab 1: Visualization
+    tabPanel(
+      "Visualization",
+      sidebarLayout(
+        sidebarPanel(
+          checkboxInput("select_all_tab1", "Select all varietals", value = TRUE),
+          selectizeInput(
+            "varietal_tab1", "Varietal (searchable)",
+            choices = varietals_all,
+            selected = varietals_all,
+            multiple = TRUE,
+            options = list(placeholder = "Search varietals...")
+          ),
+          dateRangeInput(
+            "daterange_tab1", "Date range",
+            start = start_fixed,
+            end = end_date,
+            min = start_fixed,
+            max = max_allowed,
+            format = "yyyy-mm-dd"
+          ),
+          checkboxInput("show_points_tab1", "Show points", value = FALSE),
+          width = 3
+        ),
+        mainPanel(
+          fluidRow(
+            column(12, plotOutput("ts_plot_tab1"))
+          )
+        )
+      )
     ),
-    mainPanel(
-      tabsetPanel(
-        id = "tabs",
-        tabPanel(
-          "Visualization",
-          value = "viz",
-          sidebarLayout(
-            sidebarPanel(
-              selectizeInput("viz_varietals", "Varietals", choices = NULL, multiple = TRUE),
-              dateRangeInput(
-                "viz_daterange", "Date range",
-                start = as.Date(yearmonth("1980 Jan")),
-                end = as.Date(yearmonth("1994 Dec")),
-                min = as.Date(yearmonth("1980 Jan")),
-                max = as.Date(yearmonth("1994 Dec"))
-              ),
-              width = 3
-            ),
-            mainPanel(
-              plotOutput("viz_plot", height = "900px")
-            )
-          )
+    
+    # Tab 2: Model Building
+    tabPanel(
+      "Model Building",
+      sidebarLayout(
+        sidebarPanel(
+          checkboxInput("show_specs", "Show model specifications", value = FALSE),
+          checkboxInput("show_train_acc", "Show training accuracy", value = FALSE),
+          checkboxInput("show_forecast_acc", "Show forecasting accuracy", value = TRUE),
+          width = 3
         ),
-        tabPanel(
-          "Modeling",
-          value = "model",
-          sidebarLayout(
-            sidebarPanel(
-              checkboxGroupInput("model_types", "Model types to show", 
-                                 choices = c("TSLM", "ETS", "ARIMA"),
-                                 selected = c("TSLM", "ETS", "ARIMA")),
-              actionButton("fit_models", "Fit models (training set)"),
-              checkboxInput("show_training_acc", "Show training accuracy table", TRUE),
-              width = 3
-            ),
-            mainPanel(
-              DTOutput("model_specs"),
-              conditionalPanel("input.show_training_acc == true", DTOutput("training_acc"))
-            )
+        mainPanel(
+          conditionalPanel(
+            condition = "input.show_specs",
+            h3("Model Specifications"),
+            DTOutput("model_specs_dt")
+          ),
+          conditionalPanel(
+            condition = "input.show_train_acc",
+            h3("Training Accuracy"),
+            DTOutput("train_accuracy_dt")
+          ),
+          conditionalPanel(
+            condition = "input.show_forecast_acc",
+            h3("Forecasting Accuracy"),
+            DTOutput("forecast_accuracy_dt")
           )
+        )
+      )
+    ),
+    
+    # Tab 3: Forecast
+    tabPanel(
+      "Forecast",
+      sidebarLayout(
+        sidebarPanel(
+          selectInput(
+            "model_type_forecast",
+            "Select model for visualization",
+            choices = c("TSLM", "ETS", "ARIMA"),
+            selected = "ARIMA"
+          ),
+          selectInput(
+            "model_type_table",
+            "Select model for forecast table",
+            choices = c("TSLM", "ETS", "ARIMA"),
+            selected = "ARIMA"
+          ),
+          width = 3
         ),
-        tabPanel(
-          "Forecast",
-          value = "forecast",
-          sidebarLayout(
-            sidebarPanel(
-              radioButtons("forecast_model", "Model for forecast plot/table",
-                           choices = c("TSLM", "ETS", "ARIMA"), selected = "ARIMA"),
-              width = 3
-            ),
-            mainPanel(
-              plotOutput("forecast_plot", height = "700px"),
-              hr(),
+        mainPanel(
+          fluidRow(
+            column(12, 
+              h3("Forecast Visualization"),
+              plotOutput("forecast_plot", height = "800px")
+            )
+          ),
+          fluidRow(
+            column(12,
+              h3("Forecast Table (1994)"),
               DTOutput("forecast_table")
             )
           )
@@ -78,112 +141,425 @@ ui <- fluidPage(
   )
 )
 
+# Server
 server <- function(input, output, session) {
-  # Load & prepare data (same transformations as qmd)
-  aus_wine <- read_csv(here::here("data/AustralianWines.csv"),
-                       col_types = cols(Rose = col_number()), show_col_types = FALSE) |>
-    fill(Rose, .direction = "down") |>
-    mutate(Month = mdy(str_replace(Month, '-', '-01-')) |> yearmonth())
   
-  aus_wine_ts <- aus_wine |>
-    pivot_longer(cols = -Month, names_to = "Varietal", values_to = "Sales") |>
-    as_tsibble(index = Month, key = Varietal)
-  
-  # expose choices
-  observe({
-    vars <- unique(aus_wine_ts$Varietal)
-    updateSelectizeInput(session, "viz_varietals", choices = vars, selected = vars)
-  })
-  
-  # training / test splits (fixed as in qmd)
-  train <- aus_wine_ts |> filter_index("1980 Jan" ~ "1993 Dec")
-  test  <- aus_wine_ts |> filter_index("1994 Jan" ~ "1994 Dec")
-  
-  # Reactive filtered tsibble for viz based on inputs
-  viz_ts <- reactive({
-    req(input$viz_varietals, input$viz_daterange)
-    start_ym <- yearmonth(input$viz_daterange[1])
-    end_ym   <- yearmonth(input$viz_daterange[2])
-    aus_wine_ts |>
-      filter(Varietal %in% input$viz_varietals, Month >= start_ym, Month <= end_ym)
-  })
-  
-  output$viz_plot <- renderPlot({
-    req(viz_ts())
-    viz_ts() |>
-      autoplot(Sales) +
-      facet_wrap(~ Varietal, scales = "free_y", ncol = 1) +
-      labs(x = "Month", y = "Sales") +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-      geom_vline(xintercept = as.Date(yearmonth("1994 Jan")), color = "red", linetype = "dashed")
-  })
-  
-  # Reactive storage for fitted models (mdl_df)
-  fits <- reactiveVal(NULL)
-  observeEvent(input$fit_models, {
-    # fit on training data but restricted to currently selected varietals in viz control
-    sel_vars <- isolate(input$viz_varietals)
-    train_sel <- train
-    if (!is.null(sel_vars) && length(sel_vars) > 0) {
-      train_sel <- train |> filter(Varietal %in% sel_vars)
+  # Tab 1: Select all logic
+  observeEvent(input$select_all_tab1, {
+    if (isTRUE(input$select_all_tab1)) {
+      updateSelectizeInput(session, "varietal_tab1", selected = varietals_all)
+    } else {
+      updateSelectizeInput(session, "varietal_tab1", selected = character(0))
     }
-    # Fit all three models (we will filter which ones to display later)
-    fit_res <- train_sel |>
-      model(
-        TSLM = TSLM(Sales ~ trend() + season()),
-        ETS   = ETS(Sales),
-        ARIMA = ARIMA(Sales)
+  }, ignoreInit = TRUE)
+  
+  observeEvent(input$varietal_tab1, {
+    is_all <- setequal(sort(input$varietal_tab1 %||% character(0)), varietals_all)
+    if (!identical(is_all, isTRUE(input$select_all_tab1))) {
+      updateCheckboxInput(session, "select_all_tab1", value = is_all)
+    }
+  }, ignoreInit = TRUE)
+  
+  # Tab 1: Filtered data
+  filtered_ts_tab1 <- reactive({
+    req(input$varietal_tab1, input$daterange_tab1)
+    aus_wine_ts |>
+      filter(
+        Varietal %in% input$varietal_tab1,
+        as.Date(Month) >= input$daterange_tab1[1],
+        as.Date(Month) <= input$daterange_tab1[2]
       )
-    fits(fit_res)
   })
   
-  output$model_specs <- renderDT({
-    req(fits())
-    specs <- fits() |> select(Varietal, contains("(")) |> as_tibble()
-    datatable(specs, rownames = FALSE, options = list(pageLength = 10, scrollX = TRUE))
+  # Tab 1: Plot
+  output$ts_plot_tab1 <- renderPlot({
+    df <- filtered_ts_tab1()
+    req(nrow(df) > 0)
+    
+    p <- ggplot(df, aes(x = as.Date(Month), y = Sales, colour = Varietal)) +
+      geom_line(size = 0.9) +
+      facet_wrap(~ Varietal, scales = "free_y", ncol = 1) +
+      labs(x = "Month", y = "Sales", colour = "Varietal") +
+      scale_x_date(
+        date_breaks = "5 years",
+        date_labels = "%Y Jan",
+        expand = expansion(mult = c(0.01, 0.01))
+      ) +
+      scale_colour_brewer(palette = "Set1") +
+      theme_gray(base_size = 14) +
+      theme(
+        panel.background = element_rect(fill = "grey95", colour = NA),
+        panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(colour = "white"),
+        panel.grid.minor = element_blank(),
+        strip.background = element_rect(fill = "grey85", colour = NA),
+        strip.text = element_text(size = 12),
+        legend.position = "right",
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(t = 5, r = 20, b = 5, l = 5)
+      ) +
+      geom_vline(
+        xintercept = as.Date("1994-01-01"),
+        colour = "red",
+        linetype = "dashed",
+        size = 0.8
+      )
+    
+    if (isTRUE(input$show_points_tab1)) p <- p + geom_point(size = 1.2)
+    p
+  }, res = 96, height = function() {
+    n <- max(1, length(input$varietal_tab1 %||% varietals_all))
+    base <- 280
+    extra_per_plot <- 160
+    p_h <- base + extra_per_plot * (n - 1)
+    min(3000, p_h)
   })
   
-  output$training_acc <- renderDT({
-    req(fits())
-    acc <- fits() |>
+  # Tab 2: Model specifications
+  output$model_specs_dt <- renderDT({
+    specs <- fit_models |>
+      pivot_longer(cols = c(TSLM, ETS, ARIMA), names_to = ".model", values_to = "fit") |>
+      mutate(specification = format(fit)) |>
+      select(Varietal, .model, specification)
+    
+    datatable(specs, options = list(pageLength = 10, scrollX = TRUE))
+  })
+  
+  # Tab 2: Training accuracy
+  output$train_accuracy_dt <- renderDT({
+    train_acc <- fit_models |>
       accuracy() |>
       select(Varietal, .model, RMSE, MAE, MAPE) |>
-      arrange(RMSE)
-    # filter by selected model types
-    if (!is.null(input$model_types)) {
-      acc <- acc |> filter(.model %in% input$model_types)
-    }
-    datatable(acc, rownames = FALSE, options = list(pageLength = 12))
+      arrange(.model, MAPE)
+    
+    datatable(train_acc, options = list(pageLength = 10)) |>
+      formatRound(columns = c("RMSE", "MAE", "MAPE"), digits = 1)
   })
   
-  # Forecasting (based on last fitted models)
-  fc <- reactive({
-    req(fits())
-    # forecast using the test set for the same varietals that were fit
-    fits() |> forecast(test)
+  # Tab 2: Forecast accuracy
+  output$forecast_accuracy_dt <- renderDT({
+    fc_acc <- fc_all |>
+      accuracy(aus_wine_ts) |>
+      select(Varietal, .model, RMSE, MAE, MAPE) |>
+      arrange(.model, MAPE)
+    
+    datatable(fc_acc, options = list(pageLength = 10)) |>
+      formatRound(columns = c("RMSE", "MAE", "MAPE"), digits = 1)
   })
   
+  # Tab 3: Forecast plot
   output$forecast_plot <- renderPlot({
-    req(fc())
-    # show forecasts together with recent training history (from 1993 Jan)
-    fc() |>
-      autoplot(train |> filter(Month >= yearmonth("1993 Jan"))) +
+    trn_start <- train_cutoff - 24
+    
+    fc_filtered <- fc_all |>
+      filter(.model == input$model_type_forecast)
+    
+    fc_filtered |>
+      autoplot(aus_wine_ts |> filter(Month >= trn_start)) +
       facet_wrap(~ Varietal, scales = "free_y", ncol = 1) +
-      labs(title = "Australian Wine Sales Forecasts by Varietal", y = "Sales", x = "Month") +
-      theme_minimal() +
-      geom_vline(xintercept = as.Date(yearmonth("1994 Jan")), color = "red", linetype = "dashed")
+      labs(
+        title = paste("Australian Wine Sales Forecasts by Varietal -", input$model_type_forecast),
+        y = "Sales",
+        x = "Month"
+      ) +
+      theme_minimal()
   })
   
+  # Tab 3: Forecast table
   output$forecast_table <- renderDT({
-    req(fc())
-    model_choice <- input$forecast_model
-    fc_tbl <- fc() |>
-      filter(.model == model_choice, year(Month) == 1994) |>
+    fc_table <- fc_all |>
+      filter(.model == input$model_type_table, year(Month) == 1994) |>
       as_tibble() |>
       select(Varietal, Month, .mean) |>
       pivot_wider(names_from = Month, values_from = .mean)
-    datatable(fc_tbl, rownames = FALSE, options = list(scrollX = TRUE))
+    
+    datatable(fc_table, options = list(scrollX = TRUE)) |>
+      formatRound(columns = -1, digits = 0)
   })
 }
 
-shinyApp(ui, server)
+if (interactive()) {
+  shinyApp(ui, server)
+}library(shiny)
+library(fpp3)
+library(readr)
+library(tidyverse)
+library(here)
+library(DT)
+
+# Data load & prep
+aus_wine <- read_csv(
+  here("data", "AustralianWines.csv"),
+  col_types = cols(Rose = col_number()),
+  show_col_types = FALSE
+) |>
+  fill(Rose, .direction = "down") |>
+  mutate(Month = mdy(str_replace(Month, "-", "-01-")) |> yearmonth())
+
+aus_wine_ts <- aus_wine |>
+  pivot_longer(cols = -Month, names_to = "Varietal", values_to = "Sales") |>
+  as_tsibble(index = Month, key = Varietal)
+
+# Date limits (as per QMD requirements)
+start_fixed <- as.Date("1980-01-01")
+max_allowed <- as.Date("1994-12-31")
+min_date <- start_fixed
+max_date <- as.Date(max(as.Date(aus_wine_ts$Month)))
+end_date <- min(max_date, max_allowed)
+varietals_all <- sort(unique(aus_wine_ts$Varietal))
+
+# Pre-fit models once at startup
+train_cutoff <- yearmonth("1994 Jan")
+data_trn <- aus_wine_ts |> filter(Month < train_cutoff)
+fit_models <- data_trn |>
+  model(
+    TSLM = TSLM(Sales ~ trend() + season()),
+    ETS = ETS(Sales),
+    ARIMA = ARIMA(Sales)
+  )
+fc_all <- fit_models |> forecast(h = "1 year")
+
+# UI
+ui <- fluidPage(
+  titlePanel("ADS 506 - Week 5: Australian Wine Sales Analysis"),
+  tabsetPanel(
+    # Tab 1: Visualization
+    tabPanel(
+      "Visualization",
+      sidebarLayout(
+        sidebarPanel(
+          checkboxInput("select_all_tab1", "Select all varietals", value = TRUE),
+          selectizeInput(
+            "varietal_tab1", "Varietal (searchable)",
+            choices = varietals_all,
+            selected = varietals_all,
+            multiple = TRUE,
+            options = list(placeholder = "Search varietals...")
+          ),
+          dateRangeInput(
+            "daterange_tab1", "Date range",
+            start = start_fixed,
+            end = end_date,
+            min = start_fixed,
+            max = max_allowed,
+            format = "yyyy-mm-dd"
+          ),
+          checkboxInput("show_points_tab1", "Show points", value = FALSE),
+          width = 3
+        ),
+        mainPanel(
+          fluidRow(
+            column(12, plotOutput("ts_plot_tab1"))
+          )
+        )
+      )
+    ),
+    
+    # Tab 2: Model Building
+    tabPanel(
+      "Model Building",
+      sidebarLayout(
+        sidebarPanel(
+          checkboxInput("show_specs", "Show model specifications", value = FALSE),
+          checkboxInput("show_train_acc", "Show training accuracy", value = FALSE),
+          checkboxInput("show_forecast_acc", "Show forecasting accuracy", value = TRUE),
+          width = 3
+        ),
+        mainPanel(
+          conditionalPanel(
+            condition = "input.show_specs",
+            h3("Model Specifications"),
+            DTOutput("model_specs_dt")
+          ),
+          conditionalPanel(
+            condition = "input.show_train_acc",
+            h3("Training Accuracy"),
+            DTOutput("train_accuracy_dt")
+          ),
+          conditionalPanel(
+            condition = "input.show_forecast_acc",
+            h3("Forecasting Accuracy"),
+            DTOutput("forecast_accuracy_dt")
+          )
+        )
+      )
+    ),
+    
+    # Tab 3: Forecast
+    tabPanel(
+      "Forecast",
+      sidebarLayout(
+        sidebarPanel(
+          selectInput(
+            "model_type_forecast",
+            "Select model for visualization",
+            choices = c("TSLM", "ETS", "ARIMA"),
+            selected = "ARIMA"
+          ),
+          selectInput(
+            "model_type_table",
+            "Select model for forecast table",
+            choices = c("TSLM", "ETS", "ARIMA"),
+            selected = "ARIMA"
+          ),
+          width = 3
+        ),
+        mainPanel(
+          fluidRow(
+            column(12, 
+              h3("Forecast Visualization"),
+              plotOutput("forecast_plot", height = "800px")
+            )
+          ),
+          fluidRow(
+            column(12,
+              h3("Forecast Table (1994)"),
+              DTOutput("forecast_table")
+            )
+          )
+        )
+      )
+    )
+  )
+)
+
+# Server
+server <- function(input, output, session) {
+  
+  # Tab 1: Select all logic
+  observeEvent(input$select_all_tab1, {
+    if (isTRUE(input$select_all_tab1)) {
+      updateSelectizeInput(session, "varietal_tab1", selected = varietals_all)
+    } else {
+      updateSelectizeInput(session, "varietal_tab1", selected = character(0))
+    }
+  }, ignoreInit = TRUE)
+  
+  observeEvent(input$varietal_tab1, {
+    is_all <- setequal(sort(input$varietal_tab1 %||% character(0)), varietals_all)
+    if (!identical(is_all, isTRUE(input$select_all_tab1))) {
+      updateCheckboxInput(session, "select_all_tab1", value = is_all)
+    }
+  }, ignoreInit = TRUE)
+  
+  # Tab 1: Filtered data
+  filtered_ts_tab1 <- reactive({
+    req(input$varietal_tab1, input$daterange_tab1)
+    aus_wine_ts |>
+      filter(
+        Varietal %in% input$varietal_tab1,
+        as.Date(Month) >= input$daterange_tab1[1],
+        as.Date(Month) <= input$daterange_tab1[2]
+      )
+  })
+  
+  # Tab 1: Plot
+  output$ts_plot_tab1 <- renderPlot({
+    df <- filtered_ts_tab1()
+    req(nrow(df) > 0)
+    
+    p <- ggplot(df, aes(x = as.Date(Month), y = Sales, colour = Varietal)) +
+      geom_line(size = 0.9) +
+      facet_wrap(~ Varietal, scales = "free_y", ncol = 1) +
+      labs(x = "Month", y = "Sales", colour = "Varietal") +
+      scale_x_date(
+        date_breaks = "5 years",
+        date_labels = "%Y Jan",
+        expand = expansion(mult = c(0.01, 0.01))
+      ) +
+      scale_colour_brewer(palette = "Set1") +
+      theme_gray(base_size = 14) +
+      theme(
+        panel.background = element_rect(fill = "grey95", colour = NA),
+        panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(colour = "white"),
+        panel.grid.minor = element_blank(),
+        strip.background = element_rect(fill = "grey85", colour = NA),
+        strip.text = element_text(size = 12),
+        legend.position = "right",
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(t = 5, r = 20, b = 5, l = 5)
+      ) +
+      geom_vline(
+        xintercept = as.Date("1994-01-01"),
+        colour = "red",
+        linetype = "dashed",
+        size = 0.8
+      )
+    
+    if (isTRUE(input$show_points_tab1)) p <- p + geom_point(size = 1.2)
+    p
+  }, res = 96, height = function() {
+    n <- max(1, length(input$varietal_tab1 %||% varietals_all))
+    base <- 280
+    extra_per_plot <- 160
+    p_h <- base + extra_per_plot * (n - 1)
+    min(3000, p_h)
+  })
+  
+  # Tab 2: Model specifications
+  output$model_specs_dt <- renderDT({
+    specs <- fit_models |>
+      pivot_longer(cols = c(TSLM, ETS, ARIMA), names_to = ".model", values_to = "fit") |>
+      mutate(specification = format(fit)) |>
+      select(Varietal, .model, specification)
+    
+    datatable(specs, options = list(pageLength = 10, scrollX = TRUE))
+  })
+  
+  # Tab 2: Training accuracy
+  output$train_accuracy_dt <- renderDT({
+    train_acc <- fit_models |>
+      accuracy() |>
+      select(Varietal, .model, RMSE, MAE, MAPE) |>
+      arrange(.model, MAPE)
+    
+    datatable(train_acc, options = list(pageLength = 10)) |>
+      formatRound(columns = c("RMSE", "MAE", "MAPE"), digits = 1)
+  })
+  
+  # Tab 2: Forecast accuracy
+  output$forecast_accuracy_dt <- renderDT({
+    fc_acc <- fc_all |>
+      accuracy(aus_wine_ts) |>
+      select(Varietal, .model, RMSE, MAE, MAPE) |>
+      arrange(.model, MAPE)
+    
+    datatable(fc_acc, options = list(pageLength = 10)) |>
+      formatRound(columns = c("RMSE", "MAE", "MAPE"), digits = 1)
+  })
+  
+  # Tab 3: Forecast plot
+  output$forecast_plot <- renderPlot({
+    trn_start <- train_cutoff - 24
+    
+    fc_filtered <- fc_all |>
+      filter(.model == input$model_type_forecast)
+    
+    fc_filtered |>
+      autoplot(aus_wine_ts |> filter(Month >= trn_start)) +
+      facet_wrap(~ Varietal, scales = "free_y", ncol = 1) +
+      labs(
+        title = paste("Australian Wine Sales Forecasts by Varietal -", input$model_type_forecast),
+        y = "Sales",
+        x = "Month"
+      ) +
+      theme_minimal()
+  })
+  
+  # Tab 3: Forecast table
+  output$forecast_table <- renderDT({
+    fc_table <- fc_all |>
+      filter(.model == input$model_type_table, year(Month) == 1994) |>
+      as_tibble() |>
+      select(Varietal, Month, .mean) |>
+      pivot_wider(names_from = Month, values_from = .mean)
+    
+    datatable(fc_table, options = list(scrollX = TRUE)) |>
+      formatRound(columns = -1, digits = 0)
+  })
+}
+
+if (interactive()) {
+  shinyApp(ui, server)
+}

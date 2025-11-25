@@ -85,12 +85,8 @@ ui <- fluidPage(
         ),
         mainPanel(
           tabsetPanel(
-            tabPanel("Model specifications", br(),
-                     div(
-                       img(src = "model_specs.png", alt = "Model specifications", 
-                           style = "max-width:100%; height:auto; border:1px solid #eee; padding:8px;")
-                     )
-            ),
+            tabPanel("Model specifications", br(), 
+            DTOutput("model_specs_dt")),
             tabPanel("Training accuracy", br(), DTOutput("train_acc_dt")),
             tabPanel("Forecasting accuracy", br(), DTOutput("fc_acc_dt"))
           )
@@ -211,7 +207,32 @@ server <- function(input, output, session) {
 
     specs
   })
+  output$model_specs_dt <- renderDT({
+  req(input$models2)
 
+  # Build models
+  fit <- data_trn |>
+    model(
+      TSLM  = TSLM(Sales ~ trend() + season()),
+      ETS   = ETS(Sales),
+      ARIMA = ARIMA(Sales)
+    )
+
+  # Keep only selected models
+  fit <- fit[, input$models2]
+
+  # Extract clean model labels
+  tbl <- fit |>
+    mutate(
+      TSLM  = if ("TSLM" %in% input$models2)  map_chr(TSLM,  ~ "TSLM"),
+      ETS   = if ("ETS" %in% input$models2)   map_chr(ETS,   ~ format(.x)),
+      ARIMA = if ("ARIMA" %in% input$models2) map_chr(ARIMA, ~ format(.x))
+    ) |>
+    as_tibble() |>
+    select(Varietal, all_of(input$models2))
+
+  datatable(tbl, options = list(pageLength = 10))
+})
   output$model_specs_txt <- renderPrint({
     dat <- model_specs_wide()
     if (nrow(dat) == 0) {

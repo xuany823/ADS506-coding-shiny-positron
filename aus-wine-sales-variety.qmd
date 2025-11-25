@@ -19,10 +19,12 @@ library(here)
 
 Inputs
 
--   Multiselct for varietals to display (default all display and selected with checkbox)
--   Date range selector
-    -   First date selection fixed at 1980-01-01
-    -   Last date selection fixed at 1994-12-31
+* Multiselct for varietals to display (default all display and selected with checkbox)  
+* Date range selector  
+  * First date selection fixed at 1980-01-01  
+  * Last date selection fixed at 1994-12-31  
+  * Insert select date range scrolling bar for training cutoff  
+  * Add bullet training cutoff: year month  
 
 ```{r}
 aus_wine <- read_csv(
@@ -68,11 +70,11 @@ data_trn <- aus_wine_ts |>
 
 ## Tab2 - Modeling Building
 
-Inputs:
+Inputs:  
 
--   Toggle for model specifications (default off)
--   Toggle training accuracy (default off)
--   Toggle forecasting accuracy
+  * Toggle for model specifications (default off)
+  * Toggle training accuracy (default off)
+
 
 ### Model fitting
 
@@ -83,15 +85,6 @@ fit <- data_trn |>
     model(TSLM = TSLM(Sales ~ trend() + season()),
     ETS = ETS(Sales),
     ARIMA = ARIMA(Sales))
-
-### Model specifications
-fit
-# fit_specs <- fit |>
-#    as_tibble() |>
-#    select(Varietal, TSLM, ETS, ARIMA)
-
-# fit_specs |>
-#   knitr::kable(caption = "Model specifications by Varietal")
 ```
 
 The fitted models successfully report the required specifications: each varietal includes an ETS component form (e.g., ETS(M,A,M)) and a clearly identified ARIMA structure with full seasonal orders (e.g., ARIMA(0,0,0)(0,1,1)\[12\] w/ drift), which meets the MVP requirement for model specification.
@@ -102,9 +95,16 @@ The fitted models successfully report the required specifications: each varietal
 fit |> 
     accuracy() |> 
     select(Varietal, .model, RMSE, MAE, MAPE) |>
-    arrange(RMSE) |> 
+    arrange(.model, MAPE) |> 
     knitr::kable(digits = 1, caption = "Training accuracy sorted by RMSE")
 ```
+
+
+## Tab3 - Forecast
+
+Inputs:
+* Toggle forecasting accuracy (default off)  
+* Toggle User can select model type for forecast visualization 
 
 ### Forecasting accuracy
 
@@ -114,18 +114,12 @@ fc <- fit |>
 fc |> 
     accuracy(aus_wine_ts) |> 
     select(Varietal, .model, RMSE, MAE, MAPE) |>
-    arrange(RMSE) |>
+    arrange(.model, MAPE) |>
     knitr::kable(digits = 1, caption = "Validation accuracy sorted by RMSE")
 ```
 
-## Tab3 - Forecast
-
-Inputs:
-* Toggle User can select model type for forecast visualization 
-* Toggle User can select model for forecast table (ARIMA)
 
 ### Forecast visualization
-
 ```{r}
 trn_start <- train_cutoff - 24
 
@@ -137,17 +131,6 @@ fc |>
         theme_minimal()
 ```
 
-### Forecast table
-
-```{r}
-
-fc |>
-  filter(.model == 'ARIMA', year(Month) == 1994) |>
-  as_tibble() |>                         
-  select(Varietal, .model, Month, .mean) |>
-  pivot_wider(names_from = Month, values_from = .mean) |>
-  knitr::kable(digits = 0, caption = "Forecasted Sales for 1994 by Varietal using ARIMA Model")
-```
 
 ### Report generation
 
