@@ -56,7 +56,7 @@ ui <- fluidPage(
             "train_cutoff_year",
             "Training cutoff year",
             min = 1980,
-            max = 1995,
+            max = 1994,
             value = 1994,
             step = 1,
             sep = ""
