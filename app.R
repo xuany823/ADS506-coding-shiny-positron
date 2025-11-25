@@ -82,6 +82,20 @@ ui <- fluidPage(
           wellPanel(
             h3("Model Specifications"),
             checkboxInput("show_specs", "Show model specifications", value = TRUE),
+            checkboxGroupInput(
+              "model_type_specs",
+              "Select models:",
+              choices = c("TSLM", "ETS", "ARIMA"),
+              selected = c("TSLM", "ETS", "ARIMA")
+            ),
+            selectizeInput(
+              "varietal_specs",
+              "Select varietals:",
+              choices = varietals_all,
+              selected = varietals_all,
+              multiple = TRUE,
+              options = list(placeholder = "Search varietals...")
+            ),
             hr(),
             conditionalPanel(
               condition = "input.show_specs",
@@ -96,6 +110,20 @@ ui <- fluidPage(
           wellPanel(
             h3("Training Accuracy"),
             checkboxInput("show_train_acc", "Show training accuracy", value = TRUE),
+            checkboxGroupInput(
+              "model_type_train",
+              "Select models:",
+              choices = c("TSLM", "ETS", "ARIMA"),
+              selected = c("TSLM", "ETS", "ARIMA")
+            ),
+            selectizeInput(
+              "varietal_train",
+              "Select varietals:",
+              choices = varietals_all,
+              selected = varietals_all,
+              multiple = TRUE,
+              options = list(placeholder = "Search varietals...")
+            ),
             hr(),
             conditionalPanel(
               condition = "input.show_train_acc",
@@ -106,47 +134,63 @@ ui <- fluidPage(
       )
     ),
     
-    # Tab 3: Forecast (side by side)
-    tabPanel(
-      "Forecast",
-      fluidRow(
-        # Left column: Forecast Accuracy
-        column(
-          6,
-          wellPanel(
-            h3("Forecasting Accuracy"),
-            checkboxInput("show_forecast_acc", "Show forecasting accuracy", value = TRUE),
-            checkboxGroupInput(
-              "model_type_acc",
-              "Select models for accuracy table:",
-              choices = c("TSLM", "ETS", "ARIMA"),
-              selected = c("TSLM", "ETS", "ARIMA")
-            ),
-            hr(),
-            conditionalPanel(
-              condition = "input.show_forecast_acc",
-              DTOutput("forecast_accuracy_dt")
-            )
-          )
+# Tab 3: Forecast (side by side)
+tabPanel(
+  "Forecast",
+  fluidRow(
+    # Left column: Forecast Accuracy
+    column(
+      6,
+      wellPanel(
+        h3("Forecasting Accuracy"),
+        checkboxInput("show_forecast_acc", "Show forecasting accuracy", value = TRUE),
+        checkboxGroupInput(
+          "model_type_acc",
+          "Select models:",
+          choices = c("TSLM", "ETS", "ARIMA"),
+          selected = c("TSLM", "ETS", "ARIMA")
         ),
-        
-        # Right column: Forecast Visualization
-        column(
-          6,
-          wellPanel(
-            h3("Forecast Visualization"),
-            checkboxGroupInput(
-              "model_type_viz",
-              "Select models for visualization:",
-              choices = c("TSLM", "ETS", "ARIMA"),
-              selected = "ARIMA"
-            ),
-            hr(),
-            plotOutput("forecast_plot", height = "600px")
-          )
+        selectizeInput(
+          "varietal_acc",
+          "Select varietals:",
+          choices = varietals_all,
+          selected = varietals_all,
+          multiple = TRUE,
+          options = list(placeholder = "Search varietals...")
+        ),
+        hr(),
+        conditionalPanel(
+          condition = "input.show_forecast_acc",
+          DTOutput("forecast_accuracy_dt")
         )
       )
     ),
+    
+    # Right column: Forecast Visualization
+    column(
+      6,
+      wellPanel(
+        h3("Forecast Visualization"),
+        checkboxGroupInput(
+          "model_type_viz",
+          "Select models:",
+          choices = c("TSLM", "ETS", "ARIMA"),
+          selected = c("TSLM", "ETS", "ARIMA")
+        ),
+        selectizeInput(
+          "varietal_viz",
+          "Select varietals:",
+          choices = varietals_all,
+          selected = varietals_all,
+          multiple = TRUE,
+          options = list(placeholder = "Search varietals...")
+        ),
+        hr(),
+        plotOutput("forecast_plot", height = "600px")
+      )
+    )
+  )
+),
 
     tabPanel(
       "About",
@@ -188,23 +232,23 @@ server <- function(input, output, session) {
   })
   
   # Reactive fitted models
-fit_models <- reactive({
-  tryCatch({
-    data_trn() |>
-      model(
-        TSLM = TSLM(Sales ~ trend() + season()),
-        ETS = ETS(Sales),
-        ARIMA = ARIMA(Sales)
+  fit_models <- reactive({
+    tryCatch({
+      data_trn() |>
+        model(
+          TSLM = TSLM(Sales ~ trend() + season()),
+          ETS = ETS(Sales),
+          ARIMA = ARIMA(Sales)
+        )
+    }, error = function(e) {
+      showNotification(
+        paste("Error fitting models:", e$message),
+        type = "error",
+        duration = 10
       )
-  }, error = function(e) {
-    showNotification(
-      paste("Error fitting models:", e$message),
-      type = "error",
-      duration = 10
-    )
-    NULL
+      NULL
+    })
   })
-})
   
   # Reactive forecasts with error handling
   fc_all <- reactive({
@@ -299,10 +343,14 @@ fit_models <- reactive({
   
   # Tab 2: Model specifications
   output$model_specs_dt <- renderDT({
+    req(length(input$model_type_specs) > 0, length(input$varietal_specs) > 0)
+    
     specs <- fit_models() |>
       pivot_longer(cols = c(TSLM, ETS, ARIMA), names_to = ".model", values_to = "fit") |>
+      filter(.model %in% input$model_type_specs) |>
       mutate(specification = format(fit)) |>
       as_tibble() |>
+      filter(Varietal %in% input$varietal_specs) |>
       select(Varietal, .model, specification)
     
     datatable(specs, options = list(pageLength = 10, scrollX = TRUE))
@@ -310,9 +358,12 @@ fit_models <- reactive({
   
   # Tab 2: Training accuracy
   output$train_accuracy_dt <- renderDT({
+    req(length(input$model_type_train) > 0, length(input$varietal_train) > 0)
+    
     train_acc <- fit_models() |>
       accuracy() |>
       as_tibble() |>
+      filter(.model %in% input$model_type_train, Varietal %in% input$varietal_train) |>
       select(Varietal, .model, RMSE, MAE, MAPE) |>
       arrange(.model, MAPE)
     
@@ -322,12 +373,13 @@ fit_models <- reactive({
   
   # Tab 3: Forecast accuracy
   output$forecast_accuracy_dt <- renderDT({
-    req(length(input$model_type_acc) > 0)
+    req(length(input$model_type_acc) > 0, length(input$varietal_acc) > 0)
     
     fc_acc <- fc_all() |>
       filter(.model %in% input$model_type_acc) |>
       accuracy(aus_wine_ts) |>
       as_tibble() |>
+      filter(Varietal %in% input$varietal_acc) |>
       select(Varietal, .model, RMSE, MAE, MAPE) |>
       arrange(.model, MAPE)
     
@@ -337,22 +389,18 @@ fit_models <- reactive({
   
   # Tab 3: Forecast plot with better error handling
   output$forecast_plot <- renderPlot({
-    req(length(input$model_type_viz) > 0)
+    req(length(input$model_type_viz) > 0, length(input$varietal_viz) > 0)
     req(!is.null(fc_all()))
     
     trn_start <- train_cutoff_reactive() - 24
     
     fc_filtered <- fc_all() |>
-      filter(.model %in% input$model_type_viz)
+      filter(.model %in% input$model_type_viz, Varietal %in% input$varietal_viz)
     
     req(nrow(fc_filtered) > 0)
     
-    # 打印调试信息
-    print(paste("Plotting models:", paste(unique(fc_filtered$.model), collapse = ", ")))
-    print(paste("Number of forecast rows:", nrow(fc_filtered)))
-    
     fc_filtered |>
-      autoplot(aus_wine_ts |> filter(Month >= trn_start), level = c(80, 95)) +
+      autoplot(aus_wine_ts |> filter(Month >= trn_start, Varietal %in% input$varietal_viz), level = c(80, 95)) +
       facet_wrap(~ Varietal, scales = "free_y", ncol = 1) +
       labs(
         title = paste("Forecasts -", paste(input$model_type_viz, collapse = ", ")),
