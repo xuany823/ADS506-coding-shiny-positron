@@ -56,8 +56,8 @@ ui <- fluidPage(
             "train_cutoff_year",
             "Training cutoff year",
             min = 1980,
-            max = 1994,
-            value = 1994,
+            max = 1993,
+            value = 1993,
             step = 1,
             sep = ""
           ),
@@ -206,9 +206,21 @@ fit_models <- reactive({
   })
 })
   
-  # Reactive forecasts
+  # Reactive forecasts with error handling
   fc_all <- reactive({
-    fit_models() |> forecast(h = "1 year")
+    models <- fit_models()
+    req(!is.null(models))
+    
+    tryCatch({
+      models |> forecast(h = "1 year")
+    }, error = function(e) {
+      showNotification(
+        paste("Error generating forecasts:", e$message),
+        type = "error",
+        duration = 10
+      )
+      return(NULL)
+    })
   })
   
   # Tab 1: Select all logic
@@ -323,17 +335,21 @@ fit_models <- reactive({
       formatRound(columns = c("RMSE", "MAE", "MAPE"), digits = 1)
   })
   
-  # Tab 3: Forecast plot
+  # Tab 3: Forecast plot with better error handling
   output$forecast_plot <- renderPlot({
     req(length(input$model_type_viz) > 0)
+    req(!is.null(fc_all()))
     
     trn_start <- train_cutoff_reactive() - 24
     
     fc_filtered <- fc_all() |>
       filter(.model %in% input$model_type_viz)
     
-    # Check if there are forecasts to plot
     req(nrow(fc_filtered) > 0)
+    
+    # 打印调试信息
+    print(paste("Plotting models:", paste(unique(fc_filtered$.model), collapse = ", ")))
+    print(paste("Number of forecast rows:", nrow(fc_filtered)))
     
     fc_filtered |>
       autoplot(aus_wine_ts |> filter(Month >= trn_start), level = c(80, 95)) +
