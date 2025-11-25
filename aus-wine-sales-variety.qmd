@@ -53,7 +53,7 @@ autoplot(aus_wine_ts, Sales) +
     facet_wrap(~ Varietal, scales = "free_y", ncol = 1) +
     labs(x = "Month", y = "Sales") +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-    geom_vline(xintercept = as.Date(yearmonth("1993 Dec")), 
+    geom_vline(xintercept = as.Date(yearmonth("1994 Jan")), 
     color = "red", linetype = "dashed"
   )
 ```
@@ -62,7 +62,7 @@ autoplot(aus_wine_ts, Sales) +
 
 ```{r}
 # Create training cutoff date and split data
-train_cutoff  <- yearmonth("1993 Dec")
+train_cutoff  <- yearmonth("1994 Jan")
 
 data_trn <- aus_wine_ts |> 
   filter(Month < train_cutoff)
@@ -84,7 +84,7 @@ Built multiple models for each varietal using TSLM, auto ETS and auto ARIMA.
 fit <- data_trn |> 
     model(TSLM = TSLM(Sales ~ trend() + season()),
     ETS = ETS(Sales),
-    ARIMA = ARIMA(Sales))
+    ARIMA = ARIMA(Sales ~ pdq(0,1,1) + PDQ(0,1,1)))
 ```
 
 The fitted models successfully report the required specifications: each varietal includes an ETS component form (e.g., ETS(M,A,M)) and a clearly identified ARIMA structure with full seasonal orders (e.g., ARIMA(0,0,0)(0,1,1)\[12\] w/ drift), which meets the MVP requirement for model specification.

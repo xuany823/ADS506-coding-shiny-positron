@@ -238,7 +238,7 @@ server <- function(input, output, session) {
         model(
           TSLM = TSLM(Sales ~ trend() + season()),
           ETS = ETS(Sales),
-          ARIMA = ARIMA(Sales)
+          ARIMA = ARIMA(Sales ~ pdq(0,1,1) + PDQ(0,1,1))
         )
     }, error = function(e) {
       showNotification(
