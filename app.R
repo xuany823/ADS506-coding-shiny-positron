@@ -4,7 +4,7 @@ library(readr)
 library(tidyverse)
 library(here)
 library(DT)
-library(urca)
+
 
 # Data load & prep
 aus_wine <- read_csv(
