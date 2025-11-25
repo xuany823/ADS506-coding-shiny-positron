@@ -53,7 +53,7 @@ autoplot(aus_wine_ts, Sales) +
     facet_wrap(~ Varietal, scales = "free_y", ncol = 1) +
     labs(x = "Month", y = "Sales") +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-    geom_vline(xintercept = as.Date(yearmonth("1994 Jan")), 
+    geom_vline(xintercept = as.Date(yearmonth("1993 Dec")), 
     color = "red", linetype = "dashed"
   )
 ```
@@ -62,7 +62,7 @@ autoplot(aus_wine_ts, Sales) +
 
 ```{r}
 # Create training cutoff date and split data
-train_cutoff  <- yearmonth("1994 Jan")
+train_cutoff  <- yearmonth("1993 Dec")
 
 data_trn <- aus_wine_ts |> 
   filter(Month < train_cutoff)
