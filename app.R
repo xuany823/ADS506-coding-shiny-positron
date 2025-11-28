@@ -212,7 +212,7 @@ tabPanel(
         p("1. Use the Visualization tab to filter varietals and date ranges."),
         p("2. Use the Model Building tab to examine model forms and training accuracy."),
         p("3. Use the Forecast tab to compare forecast accuracy and visualize predictions."),
-        p("4. by choosing different training cutoff,")
+        p("4. By choosing different training cutoff, By choosing different training cutoff years, you can see how the amount of historical data included in the training window influences model behavior and forecast stability.")
       )
     )
   )
